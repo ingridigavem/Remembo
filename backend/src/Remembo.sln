@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembo.Api", "Remembo.Api\Remembo.Api.csproj", "{10C331FA-3CCA-41FF-AC48-F40D26803B88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembo.Domain", "Remembo.Domain\Remembo.Domain.csproj", "{84A5927C-2C97-4342-87CC-3DA2086B08C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembo.Service", "Remembo.Service\Remembo.Service.csproj", "{F30AAA21-A2AB-4B57-9591-86CF4E566EB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Remembo.Infrastructure", "Remembo.Infrastructure", "{9127EB6F-B9D5-44CB-AF36-11D35891CBFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Remembo.Infrastructure\Data\Data.csproj", "{CABD4410-CFAA-48D1-99DA-F60EE67DF03C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting", "Remembo.Infrastructure\CrossCutting\CrossCutting.csproj", "{3507B2B0-322C-41DD-8F62-4B8C20C28032}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembo.CrossCutting", "Remembo.CrossCutting\Remembo.CrossCutting.csproj", "{725D607A-23BE-4C6E-BCC5-2402AEFB114D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembo.Data", "Remembo.Data\Remembo.Data.csproj", "{5021F212-2C0C-4D2D-B537-7FCB9B383B0B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10C331FA-3CCA-41FF-AC48-F40D26803B88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C331FA-3CCA-41FF-AC48-F40D26803B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C331FA-3CCA-41FF-AC48-F40D26803B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C331FA-3CCA-41FF-AC48-F40D26803B88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A5927C-2C97-4342-87CC-3DA2086B08C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A5927C-2C97-4342-87CC-3DA2086B08C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A5927C-2C97-4342-87CC-3DA2086B08C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A5927C-2C97-4342-87CC-3DA2086B08C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F30AAA21-A2AB-4B57-9591-86CF4E566EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F30AAA21-A2AB-4B57-9591-86CF4E566EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F30AAA21-A2AB-4B57-9591-86CF4E566EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F30AAA21-A2AB-4B57-9591-86CF4E566EB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CABD4410-CFAA-48D1-99DA-F60EE67DF03C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CABD4410-CFAA-48D1-99DA-F60EE67DF03C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CABD4410-CFAA-48D1-99DA-F60EE67DF03C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CABD4410-CFAA-48D1-99DA-F60EE67DF03C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3507B2B0-322C-41DD-8F62-4B8C20C28032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3507B2B0-322C-41DD-8F62-4B8C20C28032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3507B2B0-322C-41DD-8F62-4B8C20C28032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3507B2B0-322C-41DD-8F62-4B8C20C28032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{725D607A-23BE-4C6E-BCC5-2402AEFB114D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{725D607A-23BE-4C6E-BCC5-2402AEFB114D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{725D607A-23BE-4C6E-BCC5-2402AEFB114D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{725D607A-23BE-4C6E-BCC5-2402AEFB114D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5021F212-2C0C-4D2D-B537-7FCB9B383B0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5021F212-2C0C-4D2D-B537-7FCB9B383B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5021F212-2C0C-4D2D-B537-7FCB9B383B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5021F212-2C0C-4D2D-B537-7FCB9B383B0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CABD4410-CFAA-48D1-99DA-F60EE67DF03C} = {9127EB6F-B9D5-44CB-AF36-11D35891CBFF}
+		{3507B2B0-322C-41DD-8F62-4B8C20C28032} = {9127EB6F-B9D5-44CB-AF36-11D35891CBFF}
+	EndGlobalSection
+EndGlobal
