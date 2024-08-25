@@ -40,11 +40,38 @@ public class MatterService(IMatterRepository repository) : IMatterService {
         return new Result<IdResponse>(data: new IdResponse(matter.Id), status: HttpStatusCode.Created);
     }
 
-    public Task<Result<IList<Matter>>> GetAllMattersByUserIdAsync(Guid userId) {
-        throw new NotImplementedException();
+    public async Task<Result<IList<Matter>>> GetAllMattersByUserIdAsync(Guid userId) {
+        if (userId == Guid.Empty) return new Result<IList<Matter>>(error: ErrorsMessages.NULL_USER_ID_ERROR, status: HttpStatusCode.BadRequest);
+
+        #region Retrieve Data
+        IList<Matter> matters;
+        try {
+            matters = await repository.GetAllByUserIdAsync(userId);
+            if (!matters.Any()) return new Result<IList<Matter>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.InternalServerError);
+
+        } catch (Exception ex) {
+            return new Result<IList<Matter>>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
+        }
+        #endregion
+
+        return new Result<IList<Matter>>(data: matters, status: HttpStatusCode.OK);
     }
 
-    public Task<Result<Matter>> GetMatterByIdAsync(Guid matterId) {
-        throw new NotImplementedException();
+    public async Task<Result<Matter>> GetMatterByIdAsync(Guid matterId, Guid userId) {
+        if (matterId == Guid.Empty) return new Result<Matter>(error: ErrorsMessages.NULL_ID_ERROR, status: HttpStatusCode.BadRequest);
+        if (userId == Guid.Empty) return new Result<Matter>(error: ErrorsMessages.NULL_USER_ID_ERROR, status: HttpStatusCode.BadRequest);
+
+        #region Retrieve Data
+        Matter matter;
+        try {
+            matter = await repository.SelectByIdAsync(matterId, userId);
+            if (matter is null) return new Result<Matter>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.InternalServerError);
+
+        } catch (Exception ex) {
+            return new Result<Matter>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
+        }
+        #endregion
+
+        return new Result<Matter>(data: matter, status: HttpStatusCode.OK);
     }
 }

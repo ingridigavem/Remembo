@@ -6,6 +6,6 @@ using Remembo.Domain.Shared.Responses;
 namespace Remembo.Domain.Remembo.Interfaces.Services;
 public interface IMatterService {
     Task<Result<IdResponse>> CreateMatterAsync(MatterDto matter, Guid userId);
-    Task<Result<Matter>> GetMatterByIdAsync(Guid matterId);
+    Task<Result<Matter>> GetMatterByIdAsync(Guid matterId, Guid userId);
     Task<Result<IList<Matter>>> GetAllMattersByUserIdAsync(Guid userId);
 }

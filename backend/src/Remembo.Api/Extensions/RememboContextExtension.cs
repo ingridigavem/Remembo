@@ -29,7 +29,7 @@ public static class RememboContextExtension {
 
     public static void MapRememboEndpoints(this IEndpointRouteBuilder app) {
         app.MapGroup("api/account").MapAccountEndpoints().WithTags("Account");
-        app.MapGroup("api/matter").MapMatterEndpoints().WithTags("Matter");
+        app.MapGroup("api/matter").MapMatterEndpoints().WithTags("Matter").RequireAuthorization();
 
     }
 

@@ -17,11 +17,20 @@ public class MatterRepository(MySqlConnection connection) : IMatterRepository {
 
         return true;
     }
-    public Task<IList<Matter>> GetAllByUserIdAsync(Guid userId) {
-        throw new NotImplementedException();
+    public async Task<IList<Matter>> GetAllByUserIdAsync(Guid userId) {
+        var sql = @"SELECT `Id`, `Name`, `UserId` 
+                        FROM `Remembo`.`Matters` 
+                    WHERE `UserId` = @UserId; ";
+
+        var result = await connection.QueryAsync<Matter>(sql, new { UserId = userId });
+        return result.ToList();
     }
 
-    public Task<Matter> SelectByIdAsync(Guid id) {
-        throw new NotImplementedException();
+    public async Task<Matter> SelectByIdAsync(Guid id, Guid userId) {
+        var sql = @"SELECT `Id`, `Name`, `UserId` 
+                        FROM `Remembo`.`Matters` 
+                    WHERE `Id` = @Id AND `UserId` = @UserId; ";
+
+        return await connection.QuerySingleAsync<Matter>(sql, new { Id = id, UserId = userId });
     }
 }
