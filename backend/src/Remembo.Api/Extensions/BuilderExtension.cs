@@ -26,7 +26,9 @@ public static class BuilderExtension {
                 x.TokenValidationParameters = new TokenValidationParameters {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.Secrets.JwtPrivateKey)),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true
                 };
             });
         builder.Services.AddAuthorization();

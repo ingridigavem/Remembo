@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Remembo.Domain.Remembo.DTOs;
-using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Services;
-using Remembo.Domain.Shared.DTOs;
-using Remembo.Domain.Shared.Responses;
 using System.Security.Claims;
 
 namespace Remembo.Api.Endpoints;
@@ -21,10 +18,11 @@ public static class MatterEndpoints {
         }).WithOpenApi(operation => new(operation) {
             Summary = "Create a new Matter",
             Description = "Recieve a matter name and return the matter ID",
-        }).Produces<Result<IdResponse>>(StatusCodes.Status201Created)
-          .Produces<Result<IdResponse>>(StatusCodes.Status400BadRequest)
-          .Produces<Result<IdResponse>>(StatusCodes.Status401Unauthorized)
-          .Produces<Result<IdResponse>>(StatusCodes.Status500InternalServerError);
+        }).Produces(StatusCodes.Status201Created)
+          .Produces(StatusCodes.Status400BadRequest)
+          .Produces(StatusCodes.Status401Unauthorized)
+          .Produces(StatusCodes.Status500InternalServerError);
+
 
         routeGroup.MapGet("/", async (ClaimsPrincipal user, IMatterService matterService) => {
             var tokenUserId = user.FindFirstValue("userId");
@@ -37,10 +35,12 @@ public static class MatterEndpoints {
         }).WithOpenApi(operation => new(operation) {
             Summary = "Get all Matters",
             Description = "Get all matters from user",
-        }).Produces<Result<IList<Matter>>>(StatusCodes.Status200OK)
-          .Produces<Result<IList<Matter>>>(StatusCodes.Status400BadRequest)
-          .Produces<Result<IList<Matter>>>(StatusCodes.Status401Unauthorized)
-          .Produces<Result<IList<Matter>>>(StatusCodes.Status500InternalServerError);
+        }).Produces(StatusCodes.Status200OK)
+          .Produces(StatusCodes.Status400BadRequest)
+          .Produces(StatusCodes.Status401Unauthorized)
+          .Produces(StatusCodes.Status404NotFound)
+          .Produces(StatusCodes.Status500InternalServerError);
+
 
         routeGroup.MapGet("/{id}", async ([FromRoute] Guid id, ClaimsPrincipal user, IMatterService matterService) => {
             var tokenUserId = user.FindFirstValue("userId");
@@ -53,10 +53,11 @@ public static class MatterEndpoints {
         }).WithOpenApi(operation => new(operation) {
             Summary = "Get a Matter by matter id",
             Description = "Get a matter filter by matter id from user",
-        }).Produces<Result<Matter>>(StatusCodes.Status200OK)
-          .Produces<Result<Matter>>(StatusCodes.Status400BadRequest)
-          .Produces<Result<Matter>>(StatusCodes.Status401Unauthorized)
-          .Produces<Result<Matter>>(StatusCodes.Status500InternalServerError);
+        }).Produces(StatusCodes.Status200OK)
+          .Produces(StatusCodes.Status400BadRequest)
+          .Produces(StatusCodes.Status401Unauthorized)
+          .Produces(StatusCodes.Status404NotFound)
+          .Produces(StatusCodes.Status500InternalServerError);
 
 
         return routeGroup;
