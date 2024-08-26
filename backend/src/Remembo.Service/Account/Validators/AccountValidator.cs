@@ -2,8 +2,8 @@
 using Remembo.Domain.Account.DTOs;
 
 namespace Remembo.Service.Account.Validators;
-public class AccountValidator : AbstractValidator<UserDto> {
-    public AccountValidator() {
+internal class AccountValidator : AbstractValidator<UserDto> {
+    internal AccountValidator() {
         RuleFor(u => u.Name)
                 .NotEmpty().WithMessage("User name can not be empty.")
                 .NotNull().WithMessage("User name is required.")

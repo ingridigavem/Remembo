@@ -12,6 +12,6 @@ public class Matter : Entity {
         UserId = userId;
     }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public Guid UserId { get; set; }
 }

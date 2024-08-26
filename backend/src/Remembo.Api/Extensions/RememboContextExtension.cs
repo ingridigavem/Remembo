@@ -16,6 +16,7 @@ public static class RememboContextExtension {
         builder.Services.AddTransient<IAccountService, AccountService>();
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddScoped<IMatterService, MatterService>();
+        builder.Services.AddScoped<IContentService, ContentService>();
 
         #endregion
 
@@ -23,6 +24,7 @@ public static class RememboContextExtension {
 
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IMatterRepository, MatterRepository>();
+        builder.Services.AddScoped<IContentRepository, ContentRepository>();
 
         #endregion
     }
@@ -30,7 +32,7 @@ public static class RememboContextExtension {
     public static void MapRememboEndpoints(this IEndpointRouteBuilder app) {
         app.MapGroup("api/account").MapAccountEndpoints().WithTags("Account");
         app.MapGroup("api/matter").MapMatterEndpoints().WithTags("Matter").RequireAuthorization();
-
+        app.MapGroup("api/content").MapContentEndpoints().WithTags("Content").RequireAuthorization();
     }
 
 

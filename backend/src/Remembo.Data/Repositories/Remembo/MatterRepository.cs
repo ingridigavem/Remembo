@@ -17,6 +17,7 @@ public class MatterRepository(MySqlConnection connection) : IMatterRepository {
 
         return true;
     }
+
     public async Task<IList<Matter>> GetAllByUserIdAsync(Guid userId) {
         var sql = @"SELECT `Id`, `Name`, `UserId` 
                         FROM `Remembo`.`Matters` 
