@@ -33,6 +33,7 @@ public static class RememboContextExtension {
         app.MapGroup("api/account").MapAccountEndpoints().WithTags("Account");
         app.MapGroup("api/matter").MapMatterEndpoints().WithTags("Matter").RequireAuthorization();
         app.MapGroup("api/content").MapContentEndpoints().WithTags("Content").RequireAuthorization();
+        app.MapGroup("api/review").MapReviewEndpoints().WithTags("Review").RequireAuthorization();
     }
 
 

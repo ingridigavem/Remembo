@@ -46,7 +46,7 @@ public class MatterService(IMatterRepository repository) : IMatterService {
         IList<Matter> matters;
         try {
             matters = await repository.GetAllByUserIdAsync(userId);
-            if (!matters.Any()) return new Result<IList<Matter>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.NotFound);
+            if (matters is null) return new Result<IList<Matter>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.NotFound);
 
         } catch (Exception ex) {
             return new Result<IList<Matter>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);

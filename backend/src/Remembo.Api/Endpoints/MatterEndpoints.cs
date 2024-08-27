@@ -3,7 +3,6 @@ using Remembo.Domain.Remembo.DTOs;
 using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Services;
 using Remembo.Domain.Shared.DTOs;
-using Remembo.Domain.Shared.Responses;
 using System.Security.Claims;
 
 namespace Remembo.Api.Endpoints;
@@ -21,10 +20,10 @@ public static class MatterEndpoints {
         }).WithOpenApi(operation => new(operation) {
             Summary = "Create a new Matter",
             Description = "Recieves a matter name and return the matter ID",
-        }).Produces<Result<IdResponse>>(StatusCodes.Status201Created)
-          .Produces<Result<IdResponse>>(StatusCodes.Status400BadRequest)
+        }).Produces<Result<Matter>>(StatusCodes.Status201Created)
+          .Produces<Result<Matter>>(StatusCodes.Status400BadRequest)
           .Produces(StatusCodes.Status401Unauthorized)
-          .Produces<Result<IdResponse>>(StatusCodes.Status500InternalServerError);
+          .Produces<Result<Matter>>(StatusCodes.Status500InternalServerError);
 
 
         routeGroup.MapGet("/", async (ClaimsPrincipal user, IMatterService matterService) => {
