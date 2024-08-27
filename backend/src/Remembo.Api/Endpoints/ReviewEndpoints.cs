@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Remembo.Domain.Remembo.DTOs;
+using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Services;
 using Remembo.Domain.Shared.DTOs;
-using Remembo.Domain.Shared.Responses;
+using System.Security.Claims;
 
 namespace Remembo.Api.Endpoints;
 
@@ -13,12 +15,29 @@ public static class ReviewEndpoints {
             return Results.Json(result, statusCode: (int)result.Status);
 
         }).WithOpenApi(operation => new(operation) {
-            Summary = "CHECKA A REVISAO ATUAL",
-            Description = "",
-        }).Produces<Result<IdResponse>>(StatusCodes.Status201Created)
-          .Produces<Result<IdResponse>>(StatusCodes.Status400BadRequest)
-          .Produces<Result<IdResponse>>(StatusCodes.Status401Unauthorized)
-          .Produces<Result<IdResponse>>(StatusCodes.Status500InternalServerError);
+            Summary = "Check current review",
+            Description = "Check current review and create and schedule next review",
+        }).Produces<Result<NextReviewDto>>(StatusCodes.Status200OK)
+          .Produces<Result<NextReviewDto>>(StatusCodes.Status400BadRequest)
+          .Produces<Result<NextReviewDto>>(StatusCodes.Status401Unauthorized)
+          .Produces<Result<NextReviewDto>>(StatusCodes.Status500InternalServerError);
+
+
+        routeGroup.MapGet("/", async (ClaimsPrincipal user, IReviewService reviewService) => {
+            var tokenUserId = user.FindFirstValue("userId");
+            if (string.IsNullOrEmpty(tokenUserId)) return Results.Json("Invalid token", statusCode: 405);
+
+            _ = Guid.TryParse(tokenUserId, out var userId);
+            var result = await reviewService.GetAllNotReviewedAsync(userId);
+            return Results.Json(result, statusCode: (int)result.Status);
+
+        }).WithOpenApi(operation => new(operation) {
+            Summary = "Get all reviews not reviewed",
+            Description = "Get all reviews not reviewed from user",
+        }).Produces<Result<IList<Review>>>(StatusCodes.Status200OK)
+          .Produces<Result<IList<Review>>>(StatusCodes.Status400BadRequest)
+          .Produces<Result<IList<Review>>>(StatusCodes.Status401Unauthorized)
+          .Produces<Result<IList<Review>>>(StatusCodes.Status500InternalServerError);
 
 
         return routeGroup;

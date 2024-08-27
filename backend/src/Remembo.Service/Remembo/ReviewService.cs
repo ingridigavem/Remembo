@@ -10,6 +10,7 @@ using System.Transactions;
 namespace Remembo.Service.Remembo;
 public class ReviewService(IReviewRepository repository) : IReviewService {
     private const short maximumNumberReviewsReached = 3;
+
     public async Task<Result<NextReviewDto>> ScheduleNextReviewAsync(Guid currentReviewId) {
         if (currentReviewId == Guid.Empty) return new Result<NextReviewDto>(error: ErrorsMessages.NULL_ID_ERROR, status: HttpStatusCode.BadRequest);
 
@@ -19,7 +20,8 @@ public class ReviewService(IReviewRepository repository) : IReviewService {
 
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled)) {
             try {
-                var getCurrentReviewContent = await repository.GetContentIdAndReviewNumberByReviewIdAsync(currentReviewId) ?? throw new TransactionAbortedException(ErrorsMessages.NULL_ID_ERROR);
+                var getCurrentReviewContent = await repository.GetContentIdAndReviewNumberByReviewIdAsync(currentReviewId)
+                                                    ?? throw new TransactionAbortedException(ErrorsMessages.NULL_ID_ERROR);
 
                 if (getCurrentReviewContent.ReviewNumber >= maximumNumberReviewsReached)
                     return new Result<NextReviewDto>(error: ErrorsMessages.MAXIMUM_NUMBER_REVIEWS_REACHED, status: HttpStatusCode.BadRequest);
@@ -46,6 +48,23 @@ public class ReviewService(IReviewRepository repository) : IReviewService {
         return new Result<NextReviewDto>(data: result, status: HttpStatusCode.OK);
     }
 
+    public async Task<Result<IList<Review>>> GetAllNotReviewedAsync(Guid userId) {
+        if (userId == Guid.Empty) return new Result<IList<Review>>(error: ErrorsMessages.NULL_USER_ID_ERROR, status: HttpStatusCode.BadRequest);
+
+        #region Retrieve Data
+        IList<Review> reviews;
+        try {
+            reviews = await repository.GetAllNotReviewedByUserIdAsync(userId);
+            if (reviews is null) return new Result<IList<Review>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.NotFound);
+
+        } catch (Exception ex) {
+            return new Result<IList<Review>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
+        }
+        #endregion
+
+        return new Result<IList<Review>>(data: reviews, status: HttpStatusCode.OK);
+    }
+
     private DateTime CalculateScheduleReviewDate(short currentReviewNumber) {
         var scheduleDate = DateTime.UtcNow;
         switch (currentReviewNumber) {
@@ -61,5 +80,4 @@ public class ReviewService(IReviewRepository repository) : IReviewService {
 
         return scheduleDate;
     }
-
 }
