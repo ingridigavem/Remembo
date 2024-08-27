@@ -62,6 +62,18 @@ public static class MatterEndpoints {
           .Produces<Result<Matter>>(StatusCodes.Status500InternalServerError);
 
 
+        routeGroup.MapGet("/{matterId}/contents", async ([FromRoute] Guid matterId, IContentService contentService) => {
+            var result = await contentService.GetAllContentsByMatterIdAsync(matterId);
+
+            return Results.Json(result, statusCode: (int)result.Status);
+        }).WithOpenApi(operation => new(operation) {
+            Summary = "Get all Content by matter",
+            Description = "Get all contents from a matter",
+        }).Produces<Result<IList<Content>>>(StatusCodes.Status200OK)
+          .Produces<Result<IList<Content>>>(StatusCodes.Status400BadRequest)
+          .Produces<Result<IList<Content>>>(StatusCodes.Status401Unauthorized)
+          .Produces<Result<IList<Content>>>(StatusCodes.Status404NotFound)
+          .Produces<Result<IList<Content>>>(StatusCodes.Status500InternalServerError);
         return routeGroup;
     }
 }
