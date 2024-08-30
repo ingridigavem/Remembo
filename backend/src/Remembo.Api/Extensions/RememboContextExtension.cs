@@ -17,6 +17,7 @@ public static class RememboContextExtension {
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddScoped<IMatterService, MatterService>();
         builder.Services.AddScoped<IContentService, ContentService>();
+        builder.Services.AddScoped<IReviewService, ReviewService>();
 
         #endregion
 
@@ -25,6 +26,7 @@ public static class RememboContextExtension {
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IMatterRepository, MatterRepository>();
         builder.Services.AddScoped<IContentRepository, ContentRepository>();
+        builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
         #endregion
     }

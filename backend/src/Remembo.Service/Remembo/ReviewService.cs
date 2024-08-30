@@ -1,5 +1,4 @@
-﻿using Remembo.Domain.Remembo.DTOs;
-using Remembo.Domain.Remembo.Entities;
+﻿using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Repositories;
 using Remembo.Domain.Remembo.Interfaces.Services;
 using Remembo.Domain.Shared.Constants;
@@ -11,41 +10,41 @@ namespace Remembo.Service.Remembo;
 public class ReviewService(IReviewRepository repository) : IReviewService {
     private const short maximumNumberReviewsReached = 3;
 
-    public async Task<Result<NextReviewDto>> ScheduleNextReviewAsync(Guid currentReviewId) {
-        if (currentReviewId == Guid.Empty) return new Result<NextReviewDto>(error: ErrorsMessages.NULL_ID_ERROR, status: HttpStatusCode.BadRequest);
+    public async Task<Result<Review>> ScheduleNextReviewAsync(Guid currentReviewId) {
+        if (currentReviewId == Guid.Empty) return new Result<Review>(error: ErrorsMessages.NULL_ID_ERROR, status: HttpStatusCode.BadRequest);
 
         #region Calculate new Schedule Date, Update Currrent Review and Schedule Next Review
-
-        DateTime nextScheduleDate;
-
+        Review nextReview;
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled)) {
             try {
                 var getCurrentReviewContent = await repository.GetContentIdAndReviewNumberByReviewIdAsync(currentReviewId)
                                                     ?? throw new TransactionAbortedException(ErrorsMessages.NULL_ID_ERROR);
 
-                if (getCurrentReviewContent.ReviewNumber >= maximumNumberReviewsReached)
-                    return new Result<NextReviewDto>(error: ErrorsMessages.MAXIMUM_NUMBER_REVIEWS_REACHED, status: HttpStatusCode.BadRequest);
+                if (AllContentReviewsCompleted(getCurrentReviewContent.ReviewNumber))
+                    return new Result<Review>(status: HttpStatusCode.OK, SuccessMessages.ALL_REVIEWS_FINISHED);
+
+                if (ReviewNumberGreaterThanMaximumNumberReviews(getCurrentReviewContent.ReviewNumber))
+                    return new Result<Review>(error: ErrorsMessages.MAXIMUM_NUMBER_REVIEWS_REACHED, status: HttpStatusCode.BadRequest);
 
                 var updateSucceed = await repository.UpdateCurrentReviewAsync(currentReviewId, getCurrentReviewContent.ContentId);
                 if (!updateSucceed)
                     throw new TransactionAbortedException(ErrorsMessages.FAILED_TO_UPDATE_CURRENT_REVIEW_ERROR);
 
-                nextScheduleDate = CalculateScheduleReviewDate(getCurrentReviewContent.ReviewNumber);
+                var nextScheduleDate = CalculateScheduleReviewDate(getCurrentReviewContent.ReviewNumber);
 
-                var nextReview = new Review(getCurrentReviewContent.ContentId, nextScheduleDate);
+                nextReview = new Review(getCurrentReviewContent.ContentId, nextScheduleDate);
                 var insertSucceed = await repository.InsertNextReviewAsync(nextReview);
                 if (!insertSucceed)
                     throw new TransactionAbortedException(ErrorsMessages.FAILED_TO_CREATE_NEXT_REVIEW_ERROR);
 
                 scope.Complete();
             } catch (Exception ex) {
-                return new Result<NextReviewDto>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
+                return new Result<Review>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
             }
         }
         #endregion
 
-        var result = new NextReviewDto($"{SuccessMessages.NEXT_REVIEW_DATE}{nextScheduleDate:dd/MM/yyyy}");
-        return new Result<NextReviewDto>(data: result, status: HttpStatusCode.OK);
+        return new Result<Review>(data: nextReview, status: HttpStatusCode.OK);
     }
 
     public async Task<Result<IList<Review>>> GetAllNotReviewedAsync(Guid userId) {
@@ -80,4 +79,7 @@ public class ReviewService(IReviewRepository repository) : IReviewService {
 
         return scheduleDate;
     }
+
+    private static bool AllContentReviewsCompleted(short reviewNumber) => reviewNumber == maximumNumberReviewsReached;
+    private static bool ReviewNumberGreaterThanMaximumNumberReviews(short reviewNumber) => reviewNumber > maximumNumberReviewsReached;
 }

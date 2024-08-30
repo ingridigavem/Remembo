@@ -74,6 +74,7 @@ public static class MatterEndpoints {
           .Produces<Result<IList<Content>>>(StatusCodes.Status401Unauthorized)
           .Produces<Result<IList<Content>>>(StatusCodes.Status404NotFound)
           .Produces<Result<IList<Content>>>(StatusCodes.Status500InternalServerError);
+
         return routeGroup;
     }
 }

@@ -4,15 +4,14 @@ using Remembo.Domain.Remembo.Interfaces.Repositories;
 using Remembo.Domain.Remembo.Interfaces.Services;
 using Remembo.Domain.Shared.Constants;
 using Remembo.Domain.Shared.DTOs;
-using Remembo.Domain.Shared.Responses;
 using Remembo.Service.Remembo.Validators;
 using System.Net;
 
 namespace Remembo.Service.Remembo;
 public class ContentService(IContentRepository repository) : IContentService {
-    public async Task<Result<IdResponse>> CreateContentAndFirstReviewAsync(ContentDto request) {
+    public async Task<Result<DetailedContentDto?>> CreateContentAndFirstReviewAsync(ContentDto request) {
         #region Validate
-        if (request is null) return new Result<IdResponse>(error: ErrorsMessages.NULL_REQUEST_ERROR, status: HttpStatusCode.BadRequest);
+        if (request is null) return new Result<DetailedContentDto?>(error: ErrorsMessages.NULL_REQUEST_ERROR, status: HttpStatusCode.BadRequest);
 
         var validator = new ContentValidator();
         var validations = validator.Validate(request);
@@ -20,7 +19,7 @@ public class ContentService(IContentRepository repository) : IContentService {
         if (!validations.IsValid) {
             var errorsList = new List<string>();
             validations.Errors?.ForEach(error => errorsList.Add(error.ErrorMessage));
-            return new Result<IdResponse>(errors: errorsList, status: HttpStatusCode.BadRequest);
+            return new Result<DetailedContentDto?>(errors: errorsList, status: HttpStatusCode.BadRequest);
         }
         #endregion
 
@@ -31,16 +30,20 @@ public class ContentService(IContentRepository repository) : IContentService {
         var firstReview = new Review(content.Id, firstReviewDate);
         #endregion
 
+        DetailedContentDto? contentDetailsDto;
         #region Save Data
         try {
             var success = await repository.InsertContentAndFirstReviewAsync(content, firstReview);
-            if (!success) return new Result<IdResponse>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, status: HttpStatusCode.InternalServerError);
+            if (!success) return new Result<DetailedContentDto?>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, status: HttpStatusCode.InternalServerError);
+
+            contentDetailsDto = await repository.GetContentDetailsAsync(content.Id, firstReview.Id);
+            if (contentDetailsDto is null) return new Result<DetailedContentDto?>(data: null, status: HttpStatusCode.Created);
         } catch (Exception ex) {
-            return new Result<IdResponse>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
+            return new Result<DetailedContentDto?>(error: ErrorsMessages.FAILED_TO_PERSIST_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
         }
         #endregion
 
-        return new Result<IdResponse>(data: new IdResponse(content.Id), status: HttpStatusCode.Created);
+        return new Result<DetailedContentDto?>(data: contentDetailsDto, status: HttpStatusCode.Created);
     }
 
     public async Task<Result<IList<Content>>> GetAllContentsByMatterIdAsync(Guid matterId) {

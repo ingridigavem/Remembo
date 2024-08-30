@@ -15,4 +15,5 @@ public static class ErrorsMessages {
 
 public static class SuccessMessages {
     public const string NEXT_REVIEW_DATE = "Next review date: ";
+    public const string ALL_REVIEWS_FINISHED = "Congrats! You finished all reviews from this content.";
 }

@@ -3,7 +3,6 @@ using Remembo.Domain.Remembo.DTOs;
 using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Services;
 using Remembo.Domain.Shared.DTOs;
-using Remembo.Domain.Shared.Responses;
 
 namespace Remembo.Api.Endpoints;
 
@@ -18,10 +17,10 @@ public static class ContentEndpoints {
         }).WithOpenApi(operation => new(operation) {
             Summary = "Create a new Content and schedule the first review",
             Description = "Recieves a Content name and a MatterId and return the content ID. \n Create a content and the first scheduled review",
-        }).Produces<Result<IdResponse>>(StatusCodes.Status201Created)
-          .Produces<Result<IdResponse>>(StatusCodes.Status400BadRequest)
-          .Produces<Result<IdResponse>>(StatusCodes.Status401Unauthorized)
-          .Produces<Result<IdResponse>>(StatusCodes.Status500InternalServerError);
+        }).Produces<Result<DetailedContentDto>>(StatusCodes.Status201Created)
+          .Produces<Result<DetailedContentDto>>(StatusCodes.Status400BadRequest)
+          .Produces<Result<DetailedContentDto>>(StatusCodes.Status401Unauthorized)
+          .Produces<Result<DetailedContentDto>>(StatusCodes.Status500InternalServerError);
 
 
         routeGroup.MapGet("/{id}", async ([FromRoute] Guid id, IContentService contentService) => {

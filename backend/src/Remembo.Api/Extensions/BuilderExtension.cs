@@ -8,7 +8,7 @@ namespace Remembo.Api.Extensions;
 
 public static class BuilderExtension {
     public static void AddConfiguration(this WebApplicationBuilder builder) {
-        Configuration.Database.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+        Configuration.Database.ConnectionString = builder.Configuration.GetConnectionString("Default") ?? string.Empty;
         Configuration.Secrets.JwtPrivateKey = builder.Configuration.GetSection("Secrets").GetValue<string>("JwtPrivateKey") ?? string.Empty;
     }
 

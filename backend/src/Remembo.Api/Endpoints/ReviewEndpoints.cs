@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Remembo.Domain.Remembo.DTOs;
 using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Services;
 using Remembo.Domain.Shared.DTOs;
@@ -17,10 +16,10 @@ public static class ReviewEndpoints {
         }).WithOpenApi(operation => new(operation) {
             Summary = "Check current review",
             Description = "Check current review and create and schedule next review",
-        }).Produces<Result<NextReviewDto>>(StatusCodes.Status200OK)
-          .Produces<Result<NextReviewDto>>(StatusCodes.Status400BadRequest)
-          .Produces<Result<NextReviewDto>>(StatusCodes.Status401Unauthorized)
-          .Produces<Result<NextReviewDto>>(StatusCodes.Status500InternalServerError);
+        }).Produces<Result<Review>>(StatusCodes.Status200OK)
+          .Produces<Result<Review>>(StatusCodes.Status400BadRequest)
+          .Produces<Result<Review>>(StatusCodes.Status401Unauthorized)
+          .Produces<Result<Review>>(StatusCodes.Status500InternalServerError);
 
 
         routeGroup.MapGet("/", async (ClaimsPrincipal user, IReviewService reviewService) => {

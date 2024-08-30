@@ -59,7 +59,7 @@ public class ReviewRepository(MySqlConnection connection) : IReviewRepository {
     }
 
     public async Task<IList<Review>> GetAllNotReviewedByUserIdAsync(Guid userId) {
-        var sql = @"SELECT `Id`, `ContentId`, `ScheduleReviewDate`, `IsReviewed`
+        var sql = @"SELECT r.`Id`, r.`ContentId`, r.`ScheduleReviewDate`, r.`IsReviewed`
                         FROM `Remembo`.`Reviews` r
                     INNER JOIN `Remembo`.`Contents` c
                         ON (r.`ContentId` = c.`Id`)
