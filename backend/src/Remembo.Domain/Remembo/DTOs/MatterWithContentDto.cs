@@ -12,5 +12,5 @@ public record MatterWithContentDto {
 
     public Guid MatterId { get; set; }
     public string MatterName { get; set; }
-    public ContentDetailDto ContentReview { get; set; }
+    public ContentDetailDto? ContentReview { get; set; }
 }

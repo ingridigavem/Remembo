@@ -47,23 +47,6 @@ public class ReviewService(IReviewRepository repository) : IReviewService {
         return new Result<Review>(data: nextReview, status: HttpStatusCode.OK);
     }
 
-    public async Task<Result<IList<Review>>> GetAllNotReviewedAsync(Guid userId) {
-        if (userId == Guid.Empty) return new Result<IList<Review>>(error: ErrorsMessages.NULL_USER_ID_ERROR, status: HttpStatusCode.BadRequest);
-
-        #region Retrieve Data
-        IList<Review> reviews;
-        try {
-            reviews = await repository.GetAllNotReviewedByUserIdAsync(userId);
-            if (reviews is null) return new Result<IList<Review>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.NotFound);
-
-        } catch (Exception ex) {
-            return new Result<IList<Review>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
-        }
-        #endregion
-
-        return new Result<IList<Review>>(data: reviews, status: HttpStatusCode.OK);
-    }
-
     private DateTime CalculateScheduleReviewDate(short currentReviewNumber) {
         var scheduleDate = DateTime.UtcNow;
         switch (currentReviewNumber) {

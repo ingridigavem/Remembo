@@ -57,19 +57,4 @@ public class ReviewRepository(MySqlConnection connection) : IReviewRepository {
 
         return await connection.QuerySingleAsync<ReviewContentDto>(sql, new { Id = currentReviewId });
     }
-
-    public async Task<IList<Review>> GetAllNotReviewedByUserIdAsync(Guid userId) {
-        var sql = @"SELECT r.`Id`, r.`ContentId`, r.`ScheduleReviewDate`, r.`IsReviewed`
-                        FROM `Remembo`.`Reviews` r
-                    INNER JOIN `Remembo`.`Contents` c
-                        ON (r.`ContentId` = c.`Id`)
-                    INNER JOIN `Remembo`.`Matters` m
-                        ON (c.`MatterId` = m.`Id`)
-                    INNER JOIN `Remembo`.`Users` u
-	                    ON (m.`UserId` = u.`Id`)    
-                    WHERE r.`IsReviewed` = 0 AND u.`Id` = @UserId;";
-
-        var result = await connection.QueryAsync<Review>(sql, new { UserId = userId });
-        return result.ToList();
-    }
 }

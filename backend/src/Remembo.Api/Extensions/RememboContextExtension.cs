@@ -18,6 +18,7 @@ public static class RememboContextExtension {
         builder.Services.AddScoped<IMatterService, MatterService>();
         builder.Services.AddScoped<IContentService, ContentService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
+        builder.Services.AddScoped<IDashboardService, DashboardService>();
 
         #endregion
 
@@ -27,6 +28,7 @@ public static class RememboContextExtension {
         builder.Services.AddScoped<IMatterRepository, MatterRepository>();
         builder.Services.AddScoped<IContentRepository, ContentRepository>();
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+        builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
         #endregion
     }
@@ -36,7 +38,6 @@ public static class RememboContextExtension {
         app.MapGroup("api/matter").MapMatterEndpoints().WithTags("Matter").RequireAuthorization();
         app.MapGroup("api/content").MapContentEndpoints().WithTags("Content").RequireAuthorization();
         app.MapGroup("api/review").MapReviewEndpoints().WithTags("Review").RequireAuthorization();
+        app.MapGroup("api/dashboard").MapDashboardEndpoints().WithTags("Dashboard").RequireAuthorization();
     }
-
-
 }

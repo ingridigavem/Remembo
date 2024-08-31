@@ -53,8 +53,6 @@ public class ContentService(IContentRepository repository) : IContentService {
         IList<Content> contents;
         try {
             contents = await repository.GetAllByMatterIdAsync(matterId);
-            if (contents is null) return new Result<IList<Content>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.NotFound);
-
         } catch (Exception ex) {
             return new Result<IList<Content>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
         }
@@ -70,8 +68,6 @@ public class ContentService(IContentRepository repository) : IContentService {
         Content content;
         try {
             content = await repository.SelectByIdAsync(contentId);
-            if (content is null) return new Result<Content>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, status: HttpStatusCode.NotFound);
-
         } catch (Exception ex) {
             return new Result<Content>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
         }
