@@ -22,37 +22,46 @@ public class DashboardRepository(MySqlConnection connection) : IDashboardReposit
         return await connection.QuerySingleAsync<StatisticsDto>(sql, new { UserId = userId });
     }
 
-    public async Task<IList<ContentMatterList>> GetAllNotReviewedByUserIdAsync(Guid userId) {
-        var sql = @"SELECT 
-	                    m.`Id` AS MatterId, m.`Name` AS MatterName,
-	                    c.`Id` AS ContentId, c.`Name` AS ContentName, c.`Note` AS Note, c.`ReviewNumber` AS ReviewNumber, 
-	                    r.`Id` AS ReviewId, r.`ScheduleReviewDate` AS ScheduleReviewDate, r.`IsReviewed` AS IsReviewed
-                    FROM `Remembo`.`Reviews` r
-                    INNER JOIN `Remembo`.`Contents` c
-	                    ON (r.`ContentId` = c.`Id`)
-                    INNER JOIN `Remembo`.`Matters` m
-	                    ON (c.`MatterId` = m.`Id`)
-                    INNER JOIN `Remembo`.`Users` u
-	                    ON (m.`UserId` = u.`Id`)    
-                    WHERE r.`IsReviewed` = FALSE AND u.`Id` = @UserId; ";
+    public async Task<IList<MatterDetailsDto>> GetAllNotReviewedByUserIdAsync(Guid userId) {
+        var lookup = new Dictionary<Guid, MatterDetailsDto>();
 
-        var result = await connection.QueryAsync<ContentMatterList, ContentDetailDto, ReviewDetailDto, ContentMatterList>(
+        var sql = @"SELECT 
+                        m.Id AS MatterId, m.Name AS MatterName,
+                        c.Id AS ContentId, c.Name AS ContentName, c.Note AS Note, c.ReviewNumber AS ReviewNumber, 
+                        r.Id AS ReviewId, r.ScheduleReviewDate AS ScheduleReviewDate, r.IsReviewed AS IsReviewed
+                    FROM Remembo.Reviews r
+                    INNER JOIN Remembo.Contents c
+                        ON (r.ContentId = c.Id)
+                    INNER JOIN Remembo.Matters m
+                        ON (c.MatterId = m.Id)
+                    INNER JOIN Remembo.Users u
+                        ON (m.UserId = u.Id)    
+                    WHERE r.IsReviewed = FALSE AND u.Id = @UserId; ";
+
+        var result = await connection.QueryAsync<MatterDetailsDto, ContentDetailDto, ReviewDetailDto, MatterDetailsDto>(
                 sql,
                 (matter, content, review) => {
-                    var currentReview = new ReviewDetailDto(review.ReviewId, review.ScheduleReviewDate, review.IsReviewed);
-                    var contentDetailList = new List<ContentDetailDto> {
-                        new(content.ContentId, content.ContentName, content.Note, content.ReviewNumber, currentReview)
-                    };
 
-                    var matterContentList = new ContentMatterList(matter.MatterId, matter.MatterName, contentDetailList);
+                    if (!lookup.TryGetValue(matter.MatterId, out MatterDetailsDto? matterContent)) {
+                        lookup.Add(matter.MatterId, matterContent = matter);
+                    }
 
-                    return matterContentList;
+                    if (matterContent.Contents == null)
+                        matterContent.Contents = new List<ContentDetailDto>();
+
+                    if (content != null) {
+                        var currentReview = new ReviewDetailDto(review.ReviewId, review.ScheduleReviewDate, review.IsReviewed);
+                        var contentDetailList = new ContentDetailDto(content.ContentId, content.ContentName, content.Note, content.ReviewNumber, currentReview);
+                        matterContent.Contents.Add(contentDetailList);
+                    }
+
+                    return matterContent;
                 },
                 param: new { UserId = userId },
                 splitOn: "ContentId, ReviewId"
             );
 
-        return result.ToList();
+        var matterContentList = lookup.Values.ToList();
+        return matterContentList;
     }
-
 }

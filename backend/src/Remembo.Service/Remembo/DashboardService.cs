@@ -14,7 +14,7 @@ public class DashboardService(IDashboardRepository repository) : IDashboardServi
         DashboardDto dashboardDto = new();
         try {
             dashboardDto.SetStatistics(await repository.GetStatisticsAsync(userId));
-            dashboardDto.SetMatterDetailsList(new MatterDetailsDto(await repository.GetAllNotReviewedByUserIdAsync(userId)));
+            dashboardDto.SetMatterDetailsList(await repository.GetAllNotReviewedByUserIdAsync(userId));
         } catch (Exception ex) {
             return new Result<DashboardDto>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
         }
