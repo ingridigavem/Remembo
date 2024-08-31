@@ -20,8 +20,12 @@ public class ReviewService(IReviewRepository repository) : IReviewService {
                 var getCurrentReviewContent = await repository.GetContentIdAndReviewNumberByReviewIdAsync(currentReviewId)
                                                     ?? throw new TransactionAbortedException(ErrorsMessages.NULL_ID_ERROR);
 
-                if (AllContentReviewsCompleted(getCurrentReviewContent.ReviewNumber))
+                if (AllContentReviewsCompleted(getCurrentReviewContent.ReviewNumber)) {
+                    var success = await repository.UpdateContentReviewed(currentReviewId);
+                    if (!success) throw new TransactionAbortedException(ErrorsMessages.FAILED_TO_UPDATE_CONTENT_REVIEWED_ERROR);
+
                     return new Result<Review>(status: HttpStatusCode.OK, SuccessMessages.ALL_REVIEWS_FINISHED);
+                }
 
                 if (ReviewNumberGreaterThanMaximumNumberReviews(getCurrentReviewContent.ReviewNumber))
                     return new Result<Review>(error: ErrorsMessages.MAXIMUM_NUMBER_REVIEWS_REACHED, status: HttpStatusCode.BadRequest);

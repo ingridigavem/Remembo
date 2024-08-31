@@ -57,4 +57,17 @@ public class ReviewRepository(MySqlConnection connection) : IReviewRepository {
 
         return await connection.QuerySingleAsync<ReviewContentDto>(sql, new { Id = currentReviewId });
     }
+
+    public async Task<bool> UpdateContentReviewed(Guid currentReviewId) {
+        var updateContentReviewedSql = @" UPDATE `Remembo`.`Contents` c
+                                          INNER JOIN `Remembo`.`Review` r
+                                              ON (r.`ContentId` = c.`Id`)
+                                          SET `IsReviewed` = TRUE
+                                          WHERE r.`Id` = @CurrentReviewId; ";
+
+        var updateContentReviewedAffectedRows = await connection.ExecuteAsync(updateContentReviewedSql, new { CurrentReviewId = currentReviewId });
+        if (updateContentReviewedAffectedRows == 0) return false;
+
+        return true;
+    }
 }

@@ -8,6 +8,7 @@ public static class ErrorsMessages {
     public const string FAILED_TO_RETRIEVE_DATA_ERROR = "Failed to retrieve data";
     public const string FAILED_TO_CREATE_NEXT_REVIEW_ERROR = "Failed to create next review";
     public const string FAILED_TO_UPDATE_CURRENT_REVIEW_ERROR = "Failed to update current review";
+    public const string FAILED_TO_UPDATE_CONTENT_REVIEWED_ERROR = "Failed to update content reviewed";
     public const string USER_PASSWORD_INVALID_ERROR = "User/Password invalid";
     public const string EMAIL_ALREADY_REGISTERED_ERROR = "Email already registered";
     public const string MAXIMUM_NUMBER_REVIEWS_REACHED = "Maximum number of reviews reached";
