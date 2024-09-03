@@ -107,9 +107,9 @@ export function SignUpForm() {
             </Form>
 
             <p className="mt-10 text-center text-sm text-gray-500">
-                Já possui conta?{' '}
-                <Link to="/cadastrar" className={buttonVariants({ variant: "link" })}>
-                    Cadastre-se
+                Já possui conta?
+                <Link to="/entrar" className={buttonVariants({ variant: "link" })}>
+                    Entrar
                 </Link>
             </p>
         </div>

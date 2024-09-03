@@ -13,8 +13,8 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { passwordValidation } from "@/lib/validations";
-import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../ui/card";
 
 const SignInFormSchema = z.object({
@@ -23,12 +23,15 @@ const SignInFormSchema = z.object({
         .email("Insira um email válido"),
     password: z.string({ required_error: "Campo obrigatório" })
         .min(1, { message: 'Insira ao menos 1 caracter' })
-        .regex(passwordValidation, { message: 'Sua senha não é valido' }),
+        //.regex(passwordValidation, { message: 'Sua senha não é valido' }),
 })
 
 export type SignInFormInputs = z.infer<typeof SignInFormSchema>
 
 export function SignInForm() {
+    const { login } = useAuth()
+    const navigate = useNavigate();
+
     const form = useForm<SignInFormInputs>({
         resolver: zodResolver(SignInFormSchema),
         defaultValues: {
@@ -39,6 +42,8 @@ export function SignInForm() {
 
     function onSubmit(values: SignInFormInputs) {
         console.log(values)
+        login("hahaha")
+        navigate("/")
     }
 
     return (
@@ -79,7 +84,7 @@ export function SignInForm() {
                                     <FormItem>
                                         <FormLabel>Senha</FormLabel>
                                         <FormControl>
-                                            <Input {...field} />
+                                            <Input type="password" {...field} />
                                         </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -92,7 +97,7 @@ export function SignInForm() {
             </Form>
 
             <p className="mt-10 text-center text-sm text-gray-500">
-                Ainda não possui conta?{' '}
+                Ainda não possui conta?
                 <Link to="/cadastrar" className={buttonVariants({ variant: "link" })}>
                     Cadastre-se
                 </Link>
