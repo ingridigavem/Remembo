@@ -8,13 +8,16 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog"
+import { Icons } from "@/components/ui/icons"
 import { formatOrderReview } from "@/lib/utils"
 import { View } from "lucide-react"
 
 interface ReviewProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
-    contentReview: ContentReview
+    contentReview: ContentReview,
+    matterName: string,
+    isLoading: boolean,
 }
-export function Review({ contentReview, ...props }: ReviewProps) {
+export function Review({ contentReview, matterName, isLoading, ...props }: ReviewProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -33,7 +36,7 @@ export function Review({ contentReview, ...props }: ReviewProps) {
                 <div className="space-y-4">
                     <div>
                         <label className="font-bold leading-10">Matéria</label>
-                        <p>Matéria</p>
+                        <p>{matterName}</p>
                     </div>
                     <div>
                         <label className="font-bold leading-10">Conteúdo</label>
@@ -45,7 +48,12 @@ export function Review({ contentReview, ...props }: ReviewProps) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button className="w-full" {...props}>Marcar como feito</Button>
+                    <Button disabled={isLoading} className="w-full" {...props}>
+                        {isLoading && (
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        Marcar como feito
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

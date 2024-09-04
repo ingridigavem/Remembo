@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
+import api, { ResponseApi } from "@/lib/api";
+import { stringToDateFormatted } from "@/lib/date";
 import { cn, formatOrderReview } from "@/lib/utils";
+import { fetchDashboard } from "@/redux/features/dashboard/thunk";
+import { useAppDispatch } from "@/redux/hooks";
 import { BookOpenCheck } from "lucide-react";
+import { useState } from "react";
 import { Review } from "../review";
 
 
@@ -11,14 +16,33 @@ interface ReviewListProps {
 }
 
 export function MatterContentReviewList({ matters } : ReviewListProps) {
-    const handleMarkDone = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
-        e.stopPropagation();
-        toast({
-            variant: "success",
-            title: "Parabéns!!",
-            description: "Mussum Ipsum, cacilds vidis litro abertis. Mauris nec dolor in eros commodo tempor.",
-            duration: 1500
-        })
+    const dispatch = useAppDispatch()
+    const [ isLoading, setIsLoading ] = useState(false)
+
+    const handleMarkDone = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+        try {
+            e.stopPropagation();
+            setIsLoading(true)
+            let descriptionMessage = ""
+            const { data } = await api.post<ResponseApi<Review>>(`/api/review/${id}`)
+            if(data.data == null)
+                descriptionMessage = data.sucessMessage ?? ""
+            else descriptionMessage = `A sua próxima revisão deste conteúdo será dia ${stringToDateFormatted(data.data.scheduleReviewDate)}`
+
+            await dispatch(fetchDashboard())
+
+            setIsLoading(false)
+            toast({
+                variant: "success",
+                title: "Parabéns! Mais um conteúdo revisado",
+                description: descriptionMessage,
+                duration: 1500
+            })
+        }catch (error) {
+            console.log(error)
+            setIsLoading(false)
+        }
+
     }
 
     const isLastElement = (index: number) => {
@@ -46,7 +70,12 @@ export function MatterContentReviewList({ matters } : ReviewListProps) {
                                                     <p>{content.contentName}</p>
                                                     <p className="text-muted-foreground text-sm">{formatOrderReview(content.reviewNumber)} </p>
                                                 </div>
-                                                <Review contentReview={content} onClick={(e) => handleMarkDone(e, content.currentReview.reviewId)} />
+                                                <Review
+                                                    contentReview={content}
+                                                    matterName={matter.matterName}
+                                                    onClick={(e) => handleMarkDone(e, content.currentReview.reviewId)}
+                                                    isLoading={isLoading}
+                                                />
                                             </div>
                                         </div>
                                     </li>

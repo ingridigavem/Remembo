@@ -11,11 +11,9 @@ interface Matter {
 
 interface Review {
     id: string,
-    content: string,
+    contentId: string,
     isReviewed: boolean,
-    reviewNumber: number,
-    scheduleReviewDate: Date,
-    note: string,
+    scheduleReviewDate: string,
 }
 
 interface DetailedNewContent {

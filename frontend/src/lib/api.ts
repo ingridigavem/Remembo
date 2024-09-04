@@ -9,6 +9,7 @@ export type ResponseApi<T = object> = {
     hasErrors: boolean;
     success: boolean;
     exceptionMessage: string | null;
+    sucessMessage?: string | null;
 }
 
 const api = axios.create({
