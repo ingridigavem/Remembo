@@ -38,10 +38,6 @@ export function SignInForm() {
 
     const form = useForm<SignInFormInputs>({
         resolver: zodResolver(SignInFormSchema),
-        defaultValues: {
-            email: "kassiafraga7@gmail.com",
-            password: "@Senha123123"
-        }
     })
 
     const isLoading = form.formState.isSubmitting
@@ -60,11 +56,14 @@ export function SignInForm() {
     return (
         <div className="space-y-8 min-w-[480px]">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <img
-                    alt="Remembo Icon"
-                    src={Logo}
-                    className="mx-auto h-14 w-auto"
-                />
+                <div className="space-y-2">
+                    <img
+                        alt="Remembo Icon"
+                        src={Logo}
+                        className="mx-auto h-14 w-auto"
+                    />
+                    <h1 className="text-center text-2xl font-bold uppercase font-brand text-primary tracking-widest">Remembo</h1>
+                </div>
                 <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight">
                     Entrar na sua conta
                 </h2>

@@ -10,10 +10,10 @@ export function MatterList() {
     const dispatch = useAppDispatch()
     const matters = useAppSelector(state => state.mattersReducer.matters)
     const countMatters = Object.keys(matters).length
+
     useEffect(() => {
         dispatch(fetchMatters())
     }, [])
-
 
     return (
         <ul className="space-y-2 pt-8">

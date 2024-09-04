@@ -12,32 +12,24 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
 import { titleCase } from "@/lib/string";
 import { cn } from "@/lib/utils";
+import { createContent } from "@/redux/features/dashboard/thunk";
+import { selectMatterOptions } from "@/redux/features/matters/mattersSlice";
+import { createMatter } from "@/redux/features/matters/thunks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BookPlus, CheckIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const OPTIONS = [
-    { label: "English", value: "en" },
-    { label: "French", value: "fr" },
-    { label: "German", value: "de" },
-    { label: "Spanish", value: "es" },
-    { label: "Russian", value: "ru" },
-    { label: "Japanese", value: "ja" },
-    { label: "Korean", value: "ko" },
-    { label: "Chinese", value: "zh" },
-]
-
 const CreateReviewFormSchema = z.object({
-    matter: z.string({
+    matterId: z.string({
         required_error: "Selecione uma matéria",
     }),
-    content: z.string({
+    name: z.string({
         required_error: "Insira o conteúdo",
     }),
     note: z.string().optional(),
@@ -46,35 +38,34 @@ const CreateReviewFormSchema = z.object({
 export type CreateReviewFormInputs = z.infer<typeof CreateReviewFormSchema>
 
 export function CreateReview() {
-    const [ matters, setMatters ] = useState(OPTIONS)
+    const dispatch = useAppDispatch()
+    const matters = useAppSelector(selectMatterOptions)
     const [search, setSearch] = useState("")
     const [open, setOpen] = useState(false)
-    //const search = useCommandState((state) => state.search)
 
     const form = useForm<z.infer<typeof CreateReviewFormSchema>>({
         resolver: zodResolver(CreateReviewFormSchema),
     })
 
-    function onSubmit(data: CreateReviewFormInputs) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+    async function handleAddMatter(name: string) {
+        await dispatch(createMatter({ name }))
     }
 
-    function handleAddMatter(value: string) {
-        setMatters([...matters, { label: titleCase(value), value: titleCase(value)}])
-        form.setValue("matter", titleCase(value))
-        setOpen(false)
+    async function onSubmit(data: CreateReviewFormInputs) {
+        await dispatch(createContent(data))
     }
+
+    useEffect(() => {
+        const newMatter = matters.filter(m => m.label === search)
+        if(newMatter.length > 0) {
+            form.setValue("matterId", newMatter[0].value)
+            setOpen(false)
+        }
+    }, [form, matters])
 
     return (
         <Sheet>
-            <SheetTrigger className="z-50 fixed bottom-5 right-5 bg-green-500 rounded-full p-3 lg:bottom-10 lg:right-10">
+            <SheetTrigger className="z-50 text-white fixed bottom-5 right-5 bg-green-500 rounded-full p-3 lg:bottom-10 lg:right-10">
                 <BookPlus className="h-8 w-8" />
             </SheetTrigger>
             <SheetContent className="w-[400px] md:min-w-[540px]">
@@ -86,7 +77,7 @@ export function CreateReview() {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="pt-6 space-y-6">
                             <FormField
                                 control={form.control}
-                                name="matter"
+                                name="matterId"
                                 render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Matéria</FormLabel>
@@ -125,19 +116,19 @@ export function CreateReview() {
                                                         </Button>
                                                     </CommandEmpty>
                                                     <CommandGroup>
-                                                        {matters.map((language) => (
+                                                        {matters.map((matter) => (
                                                             <CommandItem
-                                                                value={language.label}
-                                                                key={language.value}
+                                                                value={matter.label}
+                                                                key={matter.value}
                                                                 onSelect={() => {
-                                                                    form.setValue("matter", language.value)
+                                                                    form.setValue("matterId", matter.value)
                                                                 }}
                                                             >
-                                                                {language.label}
+                                                                {titleCase(matter.label)}
                                                                     <CheckIcon
                                                                     className={cn(
                                                                         "ml-auto h-4 w-4",
-                                                                        language.value === field.value
+                                                                        matter.value === field.value
                                                                         ? "opacity-100"
                                                                         : "opacity-0"
                                                                     )}
@@ -156,7 +147,7 @@ export function CreateReview() {
 
                             <FormField
                                 control={form.control}
-                                name="content"
+                                name="name"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Conteúdo</FormLabel>

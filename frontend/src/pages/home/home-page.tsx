@@ -1,6 +1,9 @@
 import { Stats } from "@/components/home-panel/dashboard/stats";
 import { ReviewList } from "@/components/home-panel/review";
 import { Badge } from "@/components/ui/badge";
+import { fetchDashboard } from "@/redux/features/dashboard/thunk";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
 
@@ -28,12 +31,19 @@ const reviews: Review[] = [
 ]
 
 export function HomePage() {
-
+    const dispatch = useAppDispatch()
+    const { matters } = useAppSelector(state => state.dashboardReducer)
     const reviewsOnComming = reviews.filter(r => r.scheduleReviewDate >= today)
     const countReviewsOnComming = reviewsOnComming.length
 
+    console.log(matters)
+
     const reviewsOverdue = reviews.filter(r => today > r.scheduleReviewDate )
     const countReviewsOverdue = reviewsOverdue.length
+
+    useEffect(() => {
+        dispatch(fetchDashboard())
+    }, [])
 
     return (
         <>

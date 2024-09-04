@@ -16,12 +16,13 @@ export function Navbar() {
             <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 justify-between">
                     <div className="flex">
-                        <div className="flex flex-shrink-0 items-center">
+                        <div className="flex space-x-2 flex-shrink-0 items-center">
                             <img
                                 alt="Remembo Icon"
                                 src="/logo128.png"
                                 className="block h-8 w-auto"
                             />
+                            <h1 className="hidden lg:block text-center text-lg font-bold uppercase font-brand text-primary tracking-widest">Remembo</h1>
                         </div>
                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                             {navigation.map((item) => (

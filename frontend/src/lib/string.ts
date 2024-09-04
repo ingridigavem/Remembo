@@ -6,3 +6,11 @@ export function titleCase(str: string): string {
     }
     return splitStr.join(' ');
 }
+
+export function getAcronym(str: string): string {
+    const matches = str.match(/\b(\w)/g);
+    if (matches)
+        return matches.join('').toUpperCase();
+
+    return "ND"
+}

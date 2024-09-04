@@ -1,4 +1,5 @@
 import { toast } from "@/components/ui/use-toast"
+import { RootState } from "@/redux/store"
 import { createSlice } from "@reduxjs/toolkit"
 import { createMatter, fetchMatters } from "./thunks"
 
@@ -30,5 +31,13 @@ export const matterSlice = createSlice({
         })
     },
 })
+
+export const selectMatterOptions = (state: RootState) => {
+    const matters = state.mattersReducer.matters
+    return Object.keys(matters).map(key => ({
+        value: matters[key].id,
+        label: matters[key].name
+    }))
+}
 
 export default matterSlice.reducer

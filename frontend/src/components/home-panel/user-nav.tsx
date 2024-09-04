@@ -17,11 +17,13 @@ import {
     TooltipProvider,
     TooltipTrigger
 } from "@/components/ui/tooltip";
-import { logout } from "@/redux/features/user/userSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { getAcronym } from "@/lib/string";
+import { logout, selectUser } from "@/redux/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 
 export function UserNav() {
+    const user = useAppSelector(selectUser)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
@@ -42,7 +44,7 @@ export function UserNav() {
                         >
                             <Avatar className="h-8 w-8">
                             <AvatarImage src="#" alt="Avatar" />
-                            <AvatarFallback className="bg-transparent">JD</AvatarFallback>
+                            <AvatarFallback className="bg-transparent">{getAcronym(user?.name ?? "")}</AvatarFallback>
                             </Avatar>
                         </Button>
                         </DropdownMenuTrigger>
@@ -54,9 +56,9 @@ export function UserNav() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">John Doe</p>
+                        <p className="text-sm font-medium leading-none">{user?.name}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                            johndoe@example.com
+                            {user?.email}
                         </p>
                     </div>
                 </DropdownMenuLabel>
