@@ -1,14 +1,15 @@
 
-import { useAuth } from "@/contexts/AuthContext";
+import { selectUser } from "@/redux/features/user/userSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { Navigate, Outlet } from "react-router-dom";
 
 export const ProtectedRoutes = ({
     redirectPath = '/entrar',
     children,
   }: { redirectPath?: string, children?: React.ReactNode }) => {
-    const { isLoggedIn } = useAuth();
-    console.log(isLoggedIn)
-    if (!isLoggedIn()) {
+    const user = useAppSelector(selectUser)
+
+    if (!user) {
       return <Navigate to={redirectPath} replace />;
     }
 

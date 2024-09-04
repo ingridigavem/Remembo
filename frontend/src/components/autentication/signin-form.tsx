@@ -13,9 +13,13 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/contexts/AuthContext";
+import api, { ResponseApi } from "@/lib/api";
+import { login } from "@/redux/features/user/userSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { AxiosResponse } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../ui/card";
+import { Icons } from "../ui/icons";
 
 const SignInFormSchema = z.object({
     email: z.string({ required_error: "Campo obrigatório" })
@@ -29,21 +33,24 @@ const SignInFormSchema = z.object({
 export type SignInFormInputs = z.infer<typeof SignInFormSchema>
 
 export function SignInForm() {
-    const { login } = useAuth()
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const form = useForm<SignInFormInputs>({
         resolver: zodResolver(SignInFormSchema),
-        defaultValues: {
-            email: "",
-            password: ""
-        },
     })
 
+    const isLoading = form.formState.isSubmitting
+
     function onSubmit(values: SignInFormInputs) {
-        console.log(values)
-        login("hahaha")
-        navigate("/")
+        api.post("/api/account/login", values).then((response: AxiosResponse<ResponseApi<string>>) => {
+            if(response.data.success) {
+                dispatch(login(response.data.data))
+                navigate("/")
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
     }
 
     return (
@@ -70,7 +77,7 @@ export function SignInForm() {
                                     <FormItem>
                                         <FormLabel>E-mail</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="exemplo@email.com" {...field} />
+                                            <Input placeholder="exemplo@email.com" disabled={isLoading} {...field} />
                                         </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -84,13 +91,18 @@ export function SignInForm() {
                                     <FormItem>
                                         <FormLabel>Senha</FormLabel>
                                         <FormControl>
-                                            <Input type="password" {...field} />
+                                            <Input type="password" disabled={isLoading} {...field} />
                                         </FormControl>
                                     <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">Entrar</Button>
+                            <Button type="submit" className="w-full" disabled={isLoading}>
+                                {isLoading && (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Entrar
+                            </Button>
                         </CardContent>
                     </Card>
                 </form>

@@ -17,15 +17,16 @@ import {
     TooltipProvider,
     TooltipTrigger
 } from "@/components/ui/tooltip";
-import { useAuth } from "@/contexts/AuthContext";
+import { logout } from "@/redux/features/user/userSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 
 export function UserNav() {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const { logout } = useAuth();
 
     const handleLogout = () => {
-        logout();
+        dispatch(logout())
         navigate("/entrar")
     }
 

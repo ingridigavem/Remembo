@@ -1,6 +1,12 @@
+interface User {
+    email: string,
+    name: string,
+    userId: string,
+}
+
 interface Matter {
-    id: string;
-    name: string;
+    id: string,
+    name: string,
 }
 
 interface Review {
@@ -8,6 +14,6 @@ interface Review {
     content: string,
     isReviewed: boolean,
     reviewNumber: number,
-    scheduleReviewDate: Date
-    note: string
+    scheduleReviewDate: Date,
+    note: string,
 }

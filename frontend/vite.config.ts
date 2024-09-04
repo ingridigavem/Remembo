@@ -8,7 +8,6 @@ export default defineConfig(({ mode }) => {
   return {
     define: {
       'process.env.REACT_APP_TOKEN_KEY': JSON.stringify(env.REACT_APP_TOKEN_KEY),
-      'process.env.REACT_APP_USER_KEY': JSON.stringify(env.REACT_APP_USER_KEY),
       'process.env.REACT_APP_API_URL': JSON.stringify(env.REACT_APP_API_URL),
     },
     plugins: [react()],

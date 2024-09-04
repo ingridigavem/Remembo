@@ -13,9 +13,11 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import api from "@/lib/api";
 import { fullNameValidation, onlyLettersValidation, passwordValidation } from "@/lib/validations";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../ui/card";
+import { toast } from "../ui/use-toast";
 
 const SignUpFormSchema = z.object({
     name: z.string({ required_error: "Campo obrigatório" })
@@ -34,12 +36,21 @@ const SignUpFormSchema = z.object({
 export type SignUpFormInputs = z.infer<typeof SignUpFormSchema>
 
 export function SignUpForm() {
+    const navigate = useNavigate()
     const form = useForm<SignUpFormInputs>({
-        resolver: zodResolver(SignUpFormSchema),
+        resolver: zodResolver(SignUpFormSchema)
     })
 
     function onSubmit(values: SignUpFormInputs) {
-        console.log(values)
+        api.post("/api/account/create-account", values).then(() => {
+            form.reset()
+            toast({
+                variant: "success",
+                description: "Cadastro efetuado com sucesso!",
+                duration: 1500
+            })
+            navigate("/entrar")
+        })
     }
 
     return (
@@ -94,7 +105,7 @@ export function SignUpForm() {
                                     <FormItem>
                                         <FormLabel>Senha</FormLabel>
                                         <FormControl>
-                                            <Input {...field} />
+                                            <Input type="password" {...field} />
                                         </FormControl>
                                     <FormMessage />
                                     </FormItem>
