@@ -15,14 +15,14 @@ CREATE TABLE IF NOT EXISTS `Remembo`.`Users` (
   PRIMARY KEY (`Id`));
 
 -- -----------------------------------------------------
--- Table `Remembo`.`Matters`
+-- Table `Remembo`.`Subjects`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Remembo`.`Matters` (
+CREATE TABLE IF NOT EXISTS `Remembo`.`Subjects` (
   `Id` CHAR(36) NOT NULL ,
   `UserId` CHAR(36) NOT NULL,
   `Name` NVARCHAR(50) NOT NULL,
   PRIMARY KEY (`Id`, `UserId`),
-  CONSTRAINT `fk_Matter_User`
+  CONSTRAINT `fk_Subject_User`
     FOREIGN KEY (`UserId`)
     REFERENCES `Remembo`.`Users` (`Id`)
     ON DELETE CASCADE
@@ -33,15 +33,15 @@ CREATE TABLE IF NOT EXISTS `Remembo`.`Matters` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Remembo`.`Contents` (
   `Id` CHAR(36) NOT NULL ,
-  `MatterId` CHAR(36) NOT NULL,
+  `SubjectId` CHAR(36) NOT NULL,
   `Name` NVARCHAR(250) NOT NULL,
   `Note` TEXT NULL,
   `ReviewNumber` SMALLINT NOT NULL DEFAULT 1,
   `IsCompleted` BOOLEAN NOT NULL DEFAULT 0,
-  PRIMARY KEY (`Id`, `MatterId`),
-  CONSTRAINT `fk_Content_Matter1`
-    FOREIGN KEY (`MatterId`)
-    REFERENCES `Remembo`.`Matters` (`Id`)
+  PRIMARY KEY (`Id`, `SubjectId`),
+  CONSTRAINT `fk_Content_Subject1`
+    FOREIGN KEY (`SubjectId`)
+    REFERENCES `Remembo`.`Subjects` (`Id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
 
