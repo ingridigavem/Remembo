@@ -11,8 +11,8 @@ public class DashboardRepository(MySqlConnection connection) : IDashboardReposit
 	                    COUNT(CASE WHEN c.`IsCompleted` = TRUE THEN 1 END) AS CompletedContentTotal, 
 	                    COUNT(CASE WHEN c.`IsCompleted` = FALSE THEN 1 END) AS NotCompletedContentTotal
                     FROM `Remembo`.`Contents` c
-                    INNER JOIN `Remembo`.`Matters` m
-                        ON (c.`MatterId` = m.`Id`)
+                    INNER JOIN `Remembo`.`Subjects` m
+                        ON (c.`SubjectId` = m.`Id`)
                     INNER JOIN `Remembo`.`Users` u
                         ON (m.`UserId` = u.`Id`)
                     INNER JOIN `Remembo`.`Reviews` r
@@ -22,46 +22,46 @@ public class DashboardRepository(MySqlConnection connection) : IDashboardReposit
         return await connection.QuerySingleAsync<StatisticsDto>(sql, new { UserId = userId });
     }
 
-    public async Task<IList<MatterDetailsDto>> GetAllNotReviewedByUserIdAsync(Guid userId) {
-        var lookup = new Dictionary<Guid, MatterDetailsDto>();
+    public async Task<IList<SubjectDetailsDto>> GetAllNotReviewedByUserIdAsync(Guid userId) {
+        var lookup = new Dictionary<Guid, SubjectDetailsDto>();
 
         var sql = @"SELECT 
-                        m.Id AS MatterId, m.Name AS MatterName,
+                        m.Id AS SubjectId, m.Name AS SubjectName,
                         c.Id AS ContentId, c.Name AS ContentName, c.Note AS Note, c.ReviewNumber AS ReviewNumber, 
                         r.Id AS ReviewId, r.ScheduleReviewDate AS ScheduleReviewDate, r.IsReviewed AS IsReviewed
                     FROM Remembo.Reviews r
                     INNER JOIN Remembo.Contents c
                         ON (r.ContentId = c.Id)
-                    INNER JOIN Remembo.Matters m
-                        ON (c.MatterId = m.Id)
+                    INNER JOIN Remembo.Subjects m
+                        ON (c.SubjectId = m.Id)
                     INNER JOIN Remembo.Users u
                         ON (m.UserId = u.Id)    
                     WHERE r.IsReviewed = FALSE AND u.Id = @UserId; ";
 
-        var result = await connection.QueryAsync<MatterDetailsDto, ContentDetailDto, ReviewDetailDto, MatterDetailsDto>(
+        var result = await connection.QueryAsync<SubjectDetailsDto, ContentDetailDto, ReviewDetailDto, SubjectDetailsDto>(
                 sql,
-                (matter, content, review) => {
+                (subject, content, review) => {
 
-                    if (!lookup.TryGetValue(matter.MatterId, out MatterDetailsDto? matterContent)) {
-                        lookup.Add(matter.MatterId, matterContent = matter);
+                    if (!lookup.TryGetValue(subject.SubjectId, out SubjectDetailsDto? subjectContent)) {
+                        lookup.Add(subject.SubjectId, subjectContent = subject);
                     }
 
-                    if (matterContent.Contents == null)
-                        matterContent.Contents = new List<ContentDetailDto>();
+                    if (subjectContent.Contents == null)
+                        subjectContent.Contents = new List<ContentDetailDto>();
 
                     if (content != null) {
                         var currentReview = new ReviewDetailDto(review.ReviewId, review.ScheduleReviewDate, review.IsReviewed);
                         var contentDetailList = new ContentDetailDto(content.ContentId, content.ContentName, content.Note, content.ReviewNumber, currentReview);
-                        matterContent.Contents.Add(contentDetailList);
+                        subjectContent.Contents.Add(contentDetailList);
                     }
 
-                    return matterContent;
+                    return subjectContent;
                 },
                 param: new { UserId = userId },
                 splitOn: "ContentId, ReviewId"
             );
 
-        var matterContentList = lookup.Values.ToList();
-        return matterContentList;
+        var subjectContentList = lookup.Values.ToList();
+        return subjectContentList;
     }
 }

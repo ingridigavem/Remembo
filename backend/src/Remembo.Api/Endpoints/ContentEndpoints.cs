@@ -16,7 +16,7 @@ public static class ContentEndpoints {
 
         }).WithOpenApi(operation => new(operation) {
             Summary = "Create a new Content and schedule the first review",
-            Description = "Recieves a Content name and a MatterId and return the content ID. \n Create a content and the first scheduled review",
+            Description = "Recieves a Content name and a SubjectId and return the content ID. \n Create a content and the first scheduled review",
         }).Produces<Result<DetailedContentDto>>(StatusCodes.Status201Created)
           .Produces<Result<DetailedContentDto>>(StatusCodes.Status400BadRequest)
           .Produces<Result<DetailedContentDto>>(StatusCodes.Status401Unauthorized)

@@ -10,9 +10,9 @@ public class ContentRepository : IContentRepository {
     public async Task<bool> InsertContentAndFirstReviewAsync(Content content, Review review) {
 
         var sqlInsertContent = @"INSERT INTO `Remembo`.`Contents`
-                                    (`Id`, `MatterId`, `Name`, `Note`, `ReviewNumber`)                
+                                    (`Id`, `SubjectId`, `Name`, `Note`, `ReviewNumber`)                
                                  VALUES
-                                    (@Id, @MatterId, @Name, @Note, @ReviewNumber); ";
+                                    (@Id, @SubjectId, @Name, @Note, @ReviewNumber); ";
 
 
         var sqlInsertReview = @"INSERT INTO `Remembo`.`Reviews`
@@ -42,19 +42,19 @@ public class ContentRepository : IContentRepository {
         }
     }
 
-    public async Task<IList<Content>> GetAllByMatterIdAsync(Guid matterId) {
-        var sql = @"SELECT `Id`, `MatterId`, `Name`, `Note`, `ReviewNumber` 
+    public async Task<IList<Content>> GetAllBySubjectIdAsync(Guid subjectId) {
+        var sql = @"SELECT `Id`, `SubjectId`, `Name`, `Note`, `ReviewNumber` 
                         FROM `Remembo`.`Contents` 
-                    WHERE `MatterId` = @MatterId; ";
+                    WHERE `SubjectId` = @SubjectId; ";
 
         using var connection = new MySqlConnection(Configuration.Database.ConnectionString);
         connection.Open();
-        var result = await connection.QueryAsync<Content>(sql, new { MatterId = matterId });
+        var result = await connection.QueryAsync<Content>(sql, new { SubjectId = subjectId });
         return result.ToList();
     }
 
     public async Task<Content> SelectByIdAsync(Guid contentId) {
-        var sql = @"SELECT `Id`, `MatterId`, `Name`, `Note`, `ReviewNumber` 
+        var sql = @"SELECT `Id`, `SubjectId`, `Name`, `Note`, `ReviewNumber` 
                         FROM `Remembo`.`Contents` 
                     WHERE `Id` = @Id; ";
 
@@ -65,25 +65,25 @@ public class ContentRepository : IContentRepository {
 
     public async Task<DetailedContentDto?> GetContentDetailsAsync(Guid contentId, Guid reviewId) {
         var sql = @"SELECT 
-	                    m.`Id` as MatterId, m.`Name` as MatterName,
+	                    m.`Id` as SubjectId, m.`Name` as SubjectName,
 	                    c.`Id` as ContentId, c.`Name` as ContentName, c.`Note` as Note, c.`ReviewNumber` as ReviewNumber, 
 	                    r.`Id` as ReviewId, r.`ScheduleReviewDate`, r.`IsReviewed`
                     FROM `Remembo`.`Reviews` r
                     INNER JOIN `Remembo`.`Contents` c
                         ON (r.`ContentId` = c.`Id`)
-                    INNER JOIN `Remembo`.`Matters` m
-                        ON (c.`MatterId` = m.`Id`)
+                    INNER JOIN `Remembo`.`Subjects` m
+                        ON (c.`SubjectId` = m.`Id`)
                     WHERE r.`Id` = @ReviewId AND c.`Id` = @ContentId ;";
 
         using var connection = new MySqlConnection(Configuration.Database.ConnectionString);
         connection.Open();
-        var result = await connection.QueryAsync<MatterWithContentDto, ContentDetailDto, ReviewDetailDto, DetailedContentDto>(
+        var result = await connection.QueryAsync<SubjectWithContentDto, ContentDetailDto, ReviewDetailDto, DetailedContentDto>(
                 sql,
-                (matter, content, review) => {
+                (subject, content, review) => {
                     var currentReview = new ReviewDetailDto(review.ReviewId, review.ScheduleReviewDate, review.IsReviewed);
                     var contentDetail = new ContentDetailDto(content.ContentId, content.ContentName, content.Note, content.ReviewNumber, currentReview);
-                    var matterContent = new MatterWithContentDto(matter.MatterId, matter.MatterName, contentDetail);
-                    return new DetailedContentDto(matterContent);
+                    var subjectContent = new SubjectWithContentDto(subject.SubjectId, subject.SubjectName, contentDetail);
+                    return new DetailedContentDto(subjectContent);
                 },
                 param: new { ContentId = contentId, ReviewId = reviewId },
                 splitOn: "ContentId, ReviewId"

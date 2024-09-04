@@ -24,7 +24,7 @@ public class ContentService(IContentRepository repository) : IContentService {
         #endregion
 
         #region Generate Content and First Review
-        var content = new Content(request.Name, request.MatterId, request.Note);
+        var content = new Content(request.Name, request.SubjectId, request.Note);
 
         var firstReviewDate = DateTime.UtcNow.AddHours(TimeForNextReview.TWENTY_FOUR_HOURS);
         var firstReview = new Review(content.Id, firstReviewDate);
@@ -46,13 +46,13 @@ public class ContentService(IContentRepository repository) : IContentService {
         return new Result<DetailedContentDto?>(data: contentDetailsDto, status: HttpStatusCode.Created);
     }
 
-    public async Task<Result<IList<Content>>> GetAllContentsByMatterIdAsync(Guid matterId) {
-        if (matterId == Guid.Empty) return new Result<IList<Content>>(error: ErrorsMessages.NULL_ID_ERROR, status: HttpStatusCode.BadRequest);
+    public async Task<Result<IList<Content>>> GetAllContentsBySubjectIdAsync(Guid subjectId) {
+        if (subjectId == Guid.Empty) return new Result<IList<Content>>(error: ErrorsMessages.NULL_ID_ERROR, status: HttpStatusCode.BadRequest);
 
         #region Retrieve Data
         IList<Content> contents;
         try {
-            contents = await repository.GetAllByMatterIdAsync(matterId);
+            contents = await repository.GetAllBySubjectIdAsync(subjectId);
         } catch (Exception ex) {
             return new Result<IList<Content>>(error: ErrorsMessages.FAILED_TO_RETRIEVE_DATA_ERROR, exceptionMessage: ex.Message, status: HttpStatusCode.InternalServerError);
         }

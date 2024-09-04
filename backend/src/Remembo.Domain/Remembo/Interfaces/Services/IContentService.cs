@@ -6,5 +6,5 @@ namespace Remembo.Domain.Remembo.Interfaces.Services;
 public interface IContentService {
     Task<Result<DetailedContentDto?>> CreateContentAndFirstReviewAsync(ContentDto content);
     Task<Result<Content>> GetContentByIdAsync(Guid contentId);
-    Task<Result<IList<Content>>> GetAllContentsByMatterIdAsync(Guid matterId);
+    Task<Result<IList<Content>>> GetAllContentsBySubjectIdAsync(Guid subjectId);
 }

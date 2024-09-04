@@ -4,9 +4,9 @@ using Remembo.Domain.Remembo.Entities;
 using Remembo.Domain.Remembo.Interfaces.Repositories;
 
 namespace Remembo.Data.Repositories.Remembo;
-public class MatterRepository(MySqlConnection connection) : IMatterRepository {
-    public async Task<bool> InsertAsync(Matter entity) {
-        var sql = @"INSERT INTO `Remembo`.`Matters`
+public class SubjectRepository(MySqlConnection connection) : ISubjectRepository {
+    public async Task<bool> InsertAsync(Subject entity) {
+        var sql = @"INSERT INTO `Remembo`.`Subjects`
                         (`Id`, `Name`, `UserId`)
                     VALUES
                         (@Id, @Name, @UserId); ";
@@ -17,20 +17,20 @@ public class MatterRepository(MySqlConnection connection) : IMatterRepository {
         return true;
     }
 
-    public async Task<IList<Matter>> GetAllByUserIdAsync(Guid userId) {
+    public async Task<IList<Subject>> GetAllByUserIdAsync(Guid userId) {
         var sql = @"SELECT `Id`, `Name`, `UserId` 
-                        FROM `Remembo`.`Matters` 
+                        FROM `Remembo`.`Subjects` 
                     WHERE `UserId` = @UserId; ";
 
-        var result = await connection.QueryAsync<Matter>(sql, new { UserId = userId });
+        var result = await connection.QueryAsync<Subject>(sql, new { UserId = userId });
         return result.ToList();
     }
 
-    public async Task<Matter> SelectByIdAsync(Guid id, Guid userId) {
+    public async Task<Subject> SelectByIdAsync(Guid id, Guid userId) {
         var sql = @"SELECT `Id`, `Name`, `UserId` 
-                        FROM `Remembo`.`Matters` 
+                        FROM `Remembo`.`Subjects` 
                     WHERE `Id` = @Id AND `UserId` = @UserId; ";
 
-        return await connection.QuerySingleAsync<Matter>(sql, new { Id = id, UserId = userId });
+        return await connection.QuerySingleAsync<Subject>(sql, new { Id = id, UserId = userId });
     }
 }

@@ -9,8 +9,8 @@ internal class ContentValidator : AbstractValidator<ContentDto> {
             .NotNull().WithMessage("Content name is required.")
             .MinimumLength(2)
             .MaximumLength(250);
-        RuleFor(c => c.MatterId)
-            .NotEqual(Guid.Empty).WithMessage("MatterId can not be empty.")
-            .NotNull().WithMessage("MatterId is required.");
+        RuleFor(c => c.SubjectId)
+            .NotEqual(Guid.Empty).WithMessage("SubjectId can not be empty.")
+            .NotNull().WithMessage("SubjectId is required.");
     }
 }
