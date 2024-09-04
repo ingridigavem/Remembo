@@ -1,20 +1,15 @@
-import { login, selectUser } from "@/redux/features/user/userSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { selectUser } from "@/redux/features/user/userSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export function LayoutAuthentication() {
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const user = useAppSelector(selectUser)
 
     useEffect(() => {
-        const token = localStorage.getItem(process.env.REACT_APP_TOKEN_KEY ?? "")
-        console.log(token, user)
-        if(!user && token) {
-            dispatch(login(token))
-            navigate("/")
-        }
+        if (user)
+            navigate("/", { replace: true })
     }, [])
 
     return (

@@ -38,6 +38,10 @@ export function SignInForm() {
 
     const form = useForm<SignInFormInputs>({
         resolver: zodResolver(SignInFormSchema),
+        defaultValues: {
+            email: "kassiafraga7@gmail.com",
+            password: "@Senha123123"
+        }
     })
 
     const isLoading = form.formState.isSubmitting

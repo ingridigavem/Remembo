@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 export function SignUpPage() {
     return (
         <>
-            <Helmet title="Entrar" />
+            <Helmet title="Cadastrar" />
             <SignUpForm />
         </>
     )

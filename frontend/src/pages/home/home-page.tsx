@@ -1,6 +1,7 @@
 import { Stats } from "@/components/home-panel/dashboard/stats";
 import { ReviewList } from "@/components/home-panel/review";
 import { Badge } from "@/components/ui/badge";
+import { Helmet } from "react-helmet-async";
 
 
 const today = new Date();
@@ -35,24 +36,28 @@ export function HomePage() {
     const countReviewsOverdue = reviewsOverdue.length
 
     return (
-        <div className="space-y-8">
-            <Stats />
+        <>
+            <Helmet title="Início" />
+            <div className="space-y-8">
+                <Stats />
 
-            <div className="space-y-4">
-                <h1 className="font-bold text-lg text-primary">
-                    Revisões de hoje&nbsp;&nbsp;
-                    <Badge>{countReviewsOnComming}</Badge>
-                </h1>
-                <ReviewList reviews={reviewsOnComming} />
-            </div>
+                <div className="space-y-4">
+                    <h1 className="font-bold text-lg text-primary">
+                        Revisões de hoje&nbsp;&nbsp;
+                        <Badge>{countReviewsOnComming}</Badge>
+                    </h1>
+                    <ReviewList reviews={reviewsOnComming} />
+                </div>
 
-            <div className="space-y-4">
-                <h1 className="font-bold text-lg text-destructive">
-                    Revisões vencidas&nbsp;&nbsp;
-                    <Badge variant="destructive">{countReviewsOverdue}</Badge>
-                </h1>
-                <ReviewList reviews={reviewsOverdue} />
+                <div className="space-y-4">
+                    <h1 className="font-bold text-lg text-destructive">
+                        Revisões vencidas&nbsp;&nbsp;
+                        <Badge variant="destructive">{countReviewsOverdue}</Badge>
+                    </h1>
+                    <ReviewList reviews={reviewsOverdue} />
+                </div>
             </div>
-        </div>
+        </>
+
     )
 }

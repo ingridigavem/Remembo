@@ -1,26 +1,27 @@
 import { MatterList } from "@/components/home-panel/matter"
 import { CreateMatter } from "@/components/home-panel/matter/create-matter"
 import { Badge } from "@/components/ui/badge"
-import { useState } from "react"
+import { useAppSelector } from "@/redux/hooks"
+import { Helmet } from "react-helmet-async"
 
 export function MatterPage() {
-    const [ matters, setMatters ] = useState<Matter[]>([{
-        id: "1",
-        name: "Português"
-    }])
-
-    const countMatters = matters.length
+    const matters = useAppSelector(state => state.mattersReducer.matters)
+    const countMatters = Object.keys(matters).length
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <h1 className="font-bold text-lg text-primary">
-                    Matérias &nbsp;&nbsp;
-                    <Badge>{countMatters}</Badge>
-                </h1>
-                <CreateMatter />
+        <>
+            <Helmet title="Matérias" />
+            <div className="space-y-8 divide-y">
+                <div className="flex items-center justify-between">
+                    <h1 className="font-bold text-lg text-primary">
+                        Matérias &nbsp;&nbsp;
+                        <Badge>{countMatters}</Badge>
+                    </h1>
+                    <CreateMatter />
+                </div>
+                <MatterList />
             </div>
-            <MatterList matters={matters} />
-        </div>
+        </>
+
     )
 }
