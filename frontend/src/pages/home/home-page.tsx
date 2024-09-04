@@ -1,5 +1,5 @@
-import ReviewList from "@/components/home-panel/dashboard/review/review-list";
 import { Stats } from "@/components/home-panel/dashboard/stats";
+import { ReviewList } from "@/components/home-panel/review";
 import { Badge } from "@/components/ui/badge";
 
 

@@ -5,6 +5,7 @@ import { SignInPage } from './pages/authentication/signin-page'
 import { SignUpPage } from './pages/authentication/signup-page'
 import { HomePage } from './pages/home/home-page'
 import { LayoutHome } from './pages/home/layout'
+import { MatterPage } from './pages/home/matter-page'
 import NotFoundPage from './pages/not-found'
 
 export const router = createBrowserRouter([
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
       {
         path: '',
         element: <HomePage />,
+      },
+      {
+        path: '/materias',
+        element: <MatterPage />,
       },
     ]
   },

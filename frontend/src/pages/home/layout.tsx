@@ -1,5 +1,6 @@
-import { CreateReview } from "@/components/home-panel/dashboard/create-review";
+
 import { Navbar } from "@/components/home-panel/navbar";
+import { CreateReview } from "@/components/home-panel/review";
 import { Outlet } from "react-router-dom";
 
 export function LayoutHome() {

@@ -1,13 +1,16 @@
 import { UserNav } from "@/components/home-panel/user-nav";
 import { ModeToggle } from "@/components/mode-toggle";
 import { cn } from "@/lib/utils";
+import { useLocation } from "react-router-dom";
 
 const navigation = [
-    { name: 'Painel', href: '#', current: true },
-    { name: 'Matérias', href: '#', current: false },
+    { name: 'Painel', href: '/', current: true },
+    { name: 'Matérias', href: '/materias', current: false },
 ]
 
 export function Navbar() {
+    const location = useLocation();
+
     return (
         <nav className="sticky flex justify-between border-b top-0 z-10 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
             <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -25,9 +28,9 @@ export function Navbar() {
                                 <a
                                     key={item.name}
                                     href={item.href}
-                                    aria-current={item.current ? 'page' : undefined}
+                                    aria-current={location.pathname === item.href ? 'page' : undefined}
                                     className={cn(
-                                        item.current
+                                        location.pathname === item.href
                                         ? 'border-primary text-foreground'
                                         : 'border-transparent text-muted-foreground hover:border-gray-300 hover:text-accent-foreground',
                                         'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium',
