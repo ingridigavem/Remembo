@@ -30,9 +30,7 @@ interface MatterWithNewContent {
 
 interface Dashboard {
     statistics: Statistics
-    matterDetailsList: {
-        matters: DetailedContent[]
-    }
+    matterDetailsList: DetailedContent[]
 }
 
 interface Statistics {
@@ -61,6 +59,6 @@ interface ContentReview {
 
 interface CurrentReview {
     reviewId:           string;
-    scheduleReviewDate: Date;
+    scheduleReviewDate: string;
     isReviewed:         boolean;
 }

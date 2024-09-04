@@ -1,6 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAppSelector } from "@/redux/hooks";
 
 export function Stats() {
+    const { statistics } = useAppSelector(state => state.dashboardReducer)
+
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card>
@@ -10,7 +13,7 @@ export function Stats() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">20</div>
+                    <div className="text-2xl font-bold">{statistics.completedReviewsTotal}</div>
                 </CardContent>
             </Card>
             <Card>
@@ -20,7 +23,7 @@ export function Stats() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">5</div>
+                    <div className="text-2xl font-bold">{statistics.completedContentTotal}</div>
                 </CardContent>
             </Card>
             <Card>
@@ -30,7 +33,7 @@ export function Stats() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">10</div>
+                    <div className="text-2xl font-bold">{statistics.notCompletedContentTotal}</div>
                 </CardContent>
             </Card>
 

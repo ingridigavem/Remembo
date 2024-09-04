@@ -19,3 +19,13 @@ export const formatOrderReview = (n: number) => {
       return
   }
 }
+
+export const filterContentsOnComming = (contents: ContentReview[]) => {
+  const today = new Date();
+  return contents.filter(c => new Date(c.currentReview.scheduleReviewDate).setHours(0,0,0,0) == today.setHours(0,0,0,0))
+}
+
+export const filterContentsOverdue = (contents: ContentReview[]) => {
+  const today = new Date();
+  return contents.filter(c => new Date(c.currentReview.scheduleReviewDate).setHours(0,0,0,0) < today.setHours(0,0,0,0))
+}

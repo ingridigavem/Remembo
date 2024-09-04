@@ -12,9 +12,9 @@ import { formatOrderReview } from "@/lib/utils"
 import { View } from "lucide-react"
 
 interface ReviewProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
-    review: Review
+    contentReview: ContentReview
 }
-export function Review({ review, ...props }: ReviewProps) {
+export function Review({ contentReview, ...props }: ReviewProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -27,7 +27,7 @@ export function Review({ review, ...props }: ReviewProps) {
                 <DialogHeader>
                     <DialogTitle>Revisão</DialogTitle>
                     <DialogDescription>
-                        {formatOrderReview(review.reviewNumber)}
+                        {formatOrderReview(contentReview.reviewNumber)}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
@@ -37,11 +37,11 @@ export function Review({ review, ...props }: ReviewProps) {
                     </div>
                     <div>
                         <label className="font-bold leading-10">Conteúdo</label>
-                        <p>{review.content}</p>
+                        <p>{contentReview.contentName}</p>
                     </div>
                     <div>
                         <label className="font-bold leading-10">Anotações</label>
-                        <p>{review.note}</p>
+                        <p>{contentReview.note}</p>
                     </div>
                 </div>
                 <DialogFooter>

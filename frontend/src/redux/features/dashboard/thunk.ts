@@ -11,7 +11,7 @@ export const fetchDashboard = createAsyncThunk(
         try{
             const response = await api.get<ResponseApi<Dashboard>>("/api/dashboard")
             const { data } = response.data
-            const normalized = normalize<MatterWithContent>(data?.matterDetailsList.matters, [matterEntity])
+            const normalized = normalize<MatterWithContent>(data?.matterDetailsList, [matterEntity])
             return { statistics: data?.statistics, matters: normalized.entities.matters}
         } catch(err){
             console.error(err)
