@@ -55,6 +55,13 @@ interface ContentReview {
     currentReview: CurrentReview;
 }
 
+interface Content {
+    id:     string;
+    name:   string;
+    note:          string;
+    reviewNumber:  number;
+}
+
 interface CurrentReview {
     reviewId:           string;
     scheduleReviewDate: string;

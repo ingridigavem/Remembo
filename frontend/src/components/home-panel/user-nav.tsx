@@ -18,6 +18,8 @@ import {
     TooltipTrigger
 } from "@/components/ui/tooltip";
 import { getAcronym } from "@/lib/string";
+import { resetDashboard } from "@/redux/features/dashboard/dashboardSlice";
+import { resetMatters } from "@/redux/features/matters/mattersSlice";
 import { logout, selectUser } from "@/redux/features/user/userSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,6 +30,8 @@ export function UserNav() {
     const navigate = useNavigate()
 
     const handleLogout = () => {
+        dispatch(resetMatters())
+        dispatch(resetDashboard())
         dispatch(logout())
         navigate("/entrar")
     }

@@ -11,6 +11,7 @@ import {
 import { Icons } from "@/components/ui/icons"
 import { formatOrderReview } from "@/lib/utils"
 import { View } from "lucide-react"
+import { useState } from "react"
 
 interface ReviewProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
     contentReview: ContentReview,
@@ -18,8 +19,10 @@ interface ReviewProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
     isLoading: boolean,
 }
 export function Review({ contentReview, matterName, isLoading, ...props }: ReviewProps) {
+    const [ open, setOpen ] = useState(false)
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="ghost" size="icon">
                     <View className="text-primary" />

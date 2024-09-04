@@ -45,8 +45,6 @@ export function CreateReview() {
     const [open, setOpen] = useState(false)
     const [sheetOpen, setSheetOpen] = useState(false)
 
-    console.log(matters)
-
     const form = useForm<z.infer<typeof CreateReviewFormSchema>>({
         resolver: zodResolver(CreateReviewFormSchema),
     })
@@ -198,6 +196,6 @@ export function CreateReview() {
                     </Form>
                 </div>
             </SheetContent>
-      </Sheet>
+        </Sheet>
     )
 }

@@ -1,4 +1,5 @@
 import { toast } from "@/components/ui/use-toast"
+import { stringToDateFormatted } from "@/lib/date"
 import { filterContentsOnComming, filterContentsOverdue } from "@/lib/utils"
 import { RootState } from "@/redux/store"
 import { createSlice } from "@reduxjs/toolkit"
@@ -23,7 +24,11 @@ const initialState: DashboardState = {
 export const dashboardSlice = createSlice({
     name: 'dashboard',
     initialState,
-    reducers: {},
+    reducers: {
+        resetDashboard: () => {
+            return initialState
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchDashboard.fulfilled, (state, action) => {
             if(action.payload) {
@@ -39,20 +44,22 @@ export const dashboardSlice = createSlice({
             state.matters[payload.matter.matterId] = {
                 ...state.matters[payload.matter.matterId],
                 contents: [
-                    ...state.matters[payload.matter.matterId].contents,
+                    ...state.matters[payload.matter.matterId]?.contents ?? [],
                     {
                         ...newContentReview
                     }
                 ]
             }
-
             toast({
                 variant: "success",
                 title: "Conteúdo criado com sucesso",
+                description: `A sua próxima revisão deste conteúdo será dia ${stringToDateFormatted(newContentReview.currentReview.scheduleReviewDate)}`
             })
         })
     },
 })
+
+export const { resetDashboard } = dashboardSlice.actions;
 
 export const selectMatterContentsOnComming = (state: RootState) => {
     const matters = state.dashboardReducer.matters

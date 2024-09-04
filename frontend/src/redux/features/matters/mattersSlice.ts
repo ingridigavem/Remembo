@@ -16,7 +16,11 @@ const initialState: MattersState = {
 export const matterSlice = createSlice({
     name: 'matters',
     initialState,
-    reducers: {},
+    reducers: {
+        resetMatters: () => {
+            return initialState
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchMatters.fulfilled, (state, action) => {
             if(action.payload)
@@ -31,6 +35,8 @@ export const matterSlice = createSlice({
         })
     },
 })
+
+export const { resetMatters } = matterSlice.actions;
 
 export const selectMatterOptions = (state: RootState) => {
     const matters = state.mattersReducer.matters
