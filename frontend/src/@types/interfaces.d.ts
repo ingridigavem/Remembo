@@ -1,69 +1,69 @@
 interface User {
-    email: string,
-    name: string,
-    userId: string,
+  email: string;
+  name: string;
+  userId: string;
 }
 
-interface Matter {
-    id: string,
-    name: string,
+interface Subject {
+  id: string;
+  name: string;
 }
 
 interface Review {
-    id: string,
-    contentId: string,
-    isReviewed: boolean,
-    scheduleReviewDate: string,
+  id: string;
+  contentId: string;
+  isReviewed: boolean;
+  scheduleReviewDate: string;
 }
 
 interface DetailedNewContent {
-    matter: MatterWithNewContent;
+  subject: SubjectWithNewContent;
 }
 
-interface MatterWithNewContent {
-    matterId:      string;
-    matterName:    string;
-    contentReview: ContentReview;
+interface SubjectWithNewContent {
+  subjectId: string;
+  subjectName: string;
+  contentReview: ContentReview;
 }
 
 interface Dashboard {
-    statistics: Statistics
-    matterDetailsList: DetailedContent[]
+  statistics: Statistics;
+  subjectDetailsList: DetailedContent[];
 }
 
 interface Statistics {
-    completedReviewsTotal: number
-    completedContentTotal: number
-    notCompletedContentTotal: number
+  completedReviewsTotal: number;
+  completedContentTotal: number;
+  notCompletedContentTotal: number;
 }
 
 interface DetailedContent {
-    matter: MatterWithContent;
+  subject: SubjectWithContent;
 }
 
-interface MatterWithContent {
-    matterId:      string;
-    matterName:    string;
-    contents: ContentReview[];
+interface SubjectWithContent {
+  subjectId: string;
+  subjectName: string;
+  contents: ContentReview[];
 }
 
 interface ContentReview {
-    contentId:     string;
-    contentName:   string;
-    note:          string;
-    reviewNumber:  number;
-    currentReview: CurrentReview;
+  contentId: string;
+  contentName: string;
+  note: string;
+  reviewNumber: number;
+  currentReview: CurrentReview;
 }
 
 interface Content {
-    id:     string;
-    name:   string;
-    note:          string;
-    reviewNumber:  number;
+  id: string;
+  name: string;
+  note: string;
+  reviewNumber: number;
 }
 
 interface CurrentReview {
-    reviewId:           string;
-    scheduleReviewDate: string;
-    isReviewed:         boolean;
+  reviewId: string;
+  scheduleReviewDate: string;
+  isReviewed: boolean;
 }

@@ -1,44 +1,48 @@
-import { createBrowserRouter } from 'react-router-dom'
-import { ProtectedRoutes } from './components/protected-routes'
-import { LayoutAuthentication } from './pages/authentication/layout'
-import { SignInPage } from './pages/authentication/signin-page'
-import { SignUpPage } from './pages/authentication/signup-page'
-import { HomePage } from './pages/home/home-page'
-import { LayoutHome } from './pages/home/layout'
-import { MatterPage } from './pages/home/matter-page'
-import NotFoundPage from './pages/not-found'
+import { createBrowserRouter } from "react-router-dom";
+import { ProtectedRoutes } from "./components/protected-routes";
+import { LayoutAuthentication } from "./pages/authentication/layout";
+import { SignInPage } from "./pages/authentication/signin-page";
+import { SignUpPage } from "./pages/authentication/signup-page";
+import { HomePage } from "./pages/home/home-page";
+import { LayoutHome } from "./pages/home/layout";
+import { SubjectPage } from "./pages/home/subject-page";
+import NotFoundPage from "./pages/not-found";
 
 export const router = createBrowserRouter([
   {
-    path: '',
-    element: <ProtectedRoutes><LayoutHome /></ProtectedRoutes>,
+    path: "",
+    element: (
+      <ProtectedRoutes>
+        <LayoutHome />
+      </ProtectedRoutes>
+    ),
     children: [
       {
-        path: '',
+        path: "",
         element: <HomePage />,
       },
       {
-        path: '/materias',
-        element: <MatterPage />,
+        path: "/materias",
+        element: <SubjectPage />,
       },
-    ]
+    ],
   },
   {
-    path: '/',
+    path: "/",
     element: <LayoutAuthentication />,
     children: [
       {
-        path: '/entrar',
+        path: "/entrar",
         element: <SignInPage />,
       },
       {
-        path: '/cadastrar',
+        path: "/cadastrar",
         element: <SignUpPage />,
       },
     ],
   },
   {
-    path: '*',
-    element: <NotFoundPage />
+    path: "*",
+    element: <NotFoundPage />,
   },
-])
+]);

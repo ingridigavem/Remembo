@@ -1,5 +1,5 @@
-export const dateFormatter = new Intl.DateTimeFormat('pt-BR')
+export const dateForsubject = new Intl.DateTimeFormat('pt-BR')
 
 export const stringToDateFormatted = (val: string) => {
-    return dateFormatter.format(Date.parse(val))
+    return dateForsubject.format(Date.parse(val))
 }

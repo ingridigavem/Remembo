@@ -7,8 +7,8 @@ import { createContent, fetchDashboard } from "./thunk"
 
 export interface DashboardState {
     statistics: Statistics
-    matters: {
-        [key: string] : MatterWithContent
+    subjects: {
+        [key: string] : SubjectWithContent
     }
 }
 
@@ -18,7 +18,7 @@ const initialState: DashboardState = {
         completedContentTotal: 0,
         notCompletedContentTotal: 0
     },
-    matters: {},
+    subjects: {},
 }
 
 export const dashboardSlice = createSlice({
@@ -34,17 +34,17 @@ export const dashboardSlice = createSlice({
             if(action.payload) {
                 if(action.payload.statistics)
                     state.statistics = action.payload.statistics
-                if(action.payload.matters)
-                    state.matters = action.payload.matters
+                if(action.payload.subjects)
+                    state.subjects = action.payload.subjects
             }
         })
         builder.addCase(createContent.fulfilled, (state, { payload }) => {
-            const newContentReview = payload.matter.contentReview
+            const newContentReview = payload.subject.contentReview
 
-            state.matters[payload.matter.matterId] = {
-                ...state.matters[payload.matter.matterId],
+            state.subjects[payload.subject.subjectId] = {
+                ...state.subjects[payload.subject.subjectId],
                 contents: [
-                    ...state.matters[payload.matter.matterId]?.contents ?? [],
+                    ...state.subjects[payload.subject.subjectId]?.contents ?? [],
                     {
                         ...newContentReview
                     }
@@ -61,40 +61,40 @@ export const dashboardSlice = createSlice({
 
 export const { resetDashboard } = dashboardSlice.actions;
 
-export const selectMatterContentsOnComming = (state: RootState) => {
-    const matters = state.dashboardReducer.matters
+export const selectSubjectContentsOnComming = (state: RootState) => {
+    const subjects = state.dashboardReducer.subjects
 
-    return Object.keys(matters).map(key => {
-        const matter = matters[key]
+    return Object.keys(subjects).map(key => {
+        const subject = subjects[key]
         return {
-            ...matter,
-            contents: filterContentsOnComming(matter.contents)
+            ...subject,
+            contents: filterContentsOnComming(subject.contents)
         }
     })
 }
 
 export const selectCountContentsOnComming = (state: RootState) => {
-    const matters = selectMatterContentsOnComming(state)
+    const subjects = selectSubjectContentsOnComming(state)
 
-    return matters.reduce((accumulator, matter) => accumulator + matter.contents.length, 0);
+    return subjects.reduce((accumulator, subject) => accumulator + subject.contents.length, 0);
 }
 
-export const selectMatterContentsOverdue = (state: RootState) => {
-    const matters = state.dashboardReducer.matters
+export const selectSubjectContentsOverdue = (state: RootState) => {
+    const subjects = state.dashboardReducer.subjects
 
-    return Object.keys(matters).map(key => {
-        const matter = matters[key]
+    return Object.keys(subjects).map(key => {
+        const subject = subjects[key]
         return {
-            ...matter,
-            contents: filterContentsOverdue(matter.contents)
+            ...subject,
+            contents: filterContentsOverdue(subject.contents)
         }
     })
 }
 
 export const selectCountContentsOverdue = (state: RootState) => {
-    const matters = selectMatterContentsOverdue(state)
+    const subjects = selectSubjectContentsOverdue(state)
 
-    return matters.reduce((accumulator, matter) => accumulator + matter.contents.length, 0);
+    return subjects.reduce((accumulator, subject) => accumulator + subject.contents.length, 0);
 }
 
 export default dashboardSlice.reducer
